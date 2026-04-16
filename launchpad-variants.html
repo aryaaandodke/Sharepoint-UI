@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The LaunchPad — Gruve · Variants</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── THEME TOKENS ─────────────────────────────────── */
+
+    /* A: Onyx Forest — warm dark green */
+    .theme-a {
+      --bg:           #050E08;
+      --bg2:          #091509;
+      --surface:      rgba(10, 45, 20, 0.55);
+      --surface2:     rgba(10, 45, 20, 0.35);
+      --border:       rgba(40, 120, 70, 0.22);
+      --border-hi:    rgba(60, 160, 90, 0.35);
+      --accent:       #1C8C4E;
+      --accent2:      #25B564;
+      --accent-dim:   rgba(28, 140, 78, 0.15);
+      --text:         #D8EFDF;
+      --text-muted:   #5E9070;
+      --text-dim:     #3A6047;
+      --nav-bg:       rgba(5, 14, 8, 0.96);
+      --glow:         rgba(28, 140, 78, 0.20);
+      --glow-strong:  rgba(37, 181, 100, 0.30);
+      --metal-hi:     rgba(150, 220, 170, 0.12);
+      --chip-bg:      rgba(10, 45, 20, 0.6);
+      --tag-bg:       rgba(28, 140, 78, 0.15);
+      --tag-color:    #4DC880;
+      --hero-grad:    radial-gradient(ellipse 70% 60% at 65% 40%, rgba(28,140,78,0.18) 0%, transparent 70%),
+                      radial-gradient(ellipse 40% 50% at 10% 80%, rgba(6,45,31,0.8) 0%, transparent 60%);
+    }
+
+    /* B: Graphite Steel — dark neutral with emerald */
+    .theme-b {
+      --bg:           #0C0E0D;
+      --bg2:          #111412;
+      --surface:      rgba(255, 255, 255, 0.04);
+      --surface2:     rgba(255, 255, 255, 0.025);
+      --border:       rgba(255, 255, 255, 0.09);
+      --border-hi:    rgba(255, 255, 255, 0.18);
+      --accent:       #2D8C5A;
+      --accent2:      #3DB872;
+      --accent-dim:   rgba(45, 140, 90, 0.12);
+      --text:         #E8EDE9;
+      --text-muted:   #6E827A;
+      --text-dim:     #3A4A40;
+      --nav-bg:       rgba(10, 12, 11, 0.97);
+      --glow:         rgba(45, 140, 90, 0.15);
+      --glow-strong:  rgba(61, 184, 114, 0.22);
+      --metal-hi:     rgba(255, 255, 255, 0.07);
+      --chip-bg:      rgba(255, 255, 255, 0.05);
+      --tag-bg:       rgba(45, 140, 90, 0.12);
+      --tag-color:    #4DC47E;
+      --hero-grad:    radial-gradient(ellipse 55% 55% at 70% 50%, rgba(45,140,90,0.14) 0%, transparent 65%),
+                      radial-gradient(ellipse 35% 60% at 5% 90%, rgba(12,14,13,0.95) 0%, transparent 60%);
+    }
+
+    /* C: Carbon Jade — near black, vivid jade, max contrast */
+    .theme-c {
+      --bg:           #060608;
+      --bg2:          #09090C;
+      --surface:      rgba(0, 200, 90, 0.04);
+      --surface2:     rgba(0, 200, 90, 0.025);
+      --border:       rgba(0, 200, 90, 0.14);
+      --border-hi:    rgba(0, 220, 100, 0.30);
+      --accent:       #00A85A;
+      --accent2:      #00D46E;
+      --accent-dim:   rgba(0, 168, 90, 0.12);
+      --text:         #FFFFFF;
+      --text-muted:   #5A7A66;
+      --text-dim:     #283830;
+      --nav-bg:       rgba(6, 6, 8, 0.98);
+      --glow:         rgba(0, 168, 90, 0.20);
+      --glow-strong:  rgba(0, 212, 110, 0.30);
+      --metal-hi:     rgba(0, 255, 120, 0.08);
+      --chip-bg:      rgba(0, 168, 90, 0.08);
+      --tag-bg:       rgba(0, 168, 90, 0.12);
+      --tag-color:    #00D46E;
+      --hero-grad:    radial-gradient(ellipse 60% 70% at 70% 40%, rgba(0,168,90,0.20) 0%, transparent 65%),
+                      radial-gradient(ellipse 30% 50% at 0% 100%, rgba(0,60,30,0.5) 0%, transparent 55%);
+    }
+
+    /* D: Classic Light — dark green nav/hero, warm off-white body */
+    .theme-d {
+      --bg:           #EEF6F1;
+      --bg2:          #E3EDE7;
+      --hero-bg:      #162B1E;
+      --surface:      #FFFFFF;
+      --surface2:     rgba(255, 255, 255, 0.75);
+      --border:       #D0E4D8;
+      --border-hi:    #9ACAAF;
+      --accent:       #1E4D35;
+      --accent2:      #2D7A52;
+      --accent-dim:   rgba(30, 77, 53, 0.08);
+      --text:         #0E1F16;
+      --text-muted:   #4A6558;
+      --text-dim:     #96B0A4;
+      --nav-bg:       rgba(22, 43, 30, 0.98);
+      --glow:         rgba(30, 77, 53, 0.10);
+      --glow-strong:  rgba(45, 122, 82, 0.18);
+      --metal-hi:     rgba(255, 255, 255, 0.85);
+      --chip-bg:      rgba(255, 255, 255, 0.92);
+      --tag-bg:       rgba(30, 77, 53, 0.08);
+      --tag-color:    #1E4D35;
+      --hero-grad:    radial-gradient(ellipse 60% 70% at 70% 40%, rgba(45,122,82,0.22) 0%, transparent 65%),
+                      radial-gradient(ellipse 35% 55% at 5% 90%, rgba(10,25,16,0.8) 0%, transparent 60%);
+    }
+
+    /* Theme D: force hero text light (hero is always dark green) */
+    .theme-d .hero { background: var(--hero-bg) !important; }
+    .theme-d .hero .hero-title { color: #D8EFDF; }
+    .theme-d .hero .hero-title-accent {
+      background: linear-gradient(135deg, #5ABF88 0%, #D8EFDF 65%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .theme-d .hero .hero-sub    { color: rgba(216,239,223,0.55); }
+    .theme-d .hero .stat-val    { color: #D8EFDF; }
+    .theme-d .hero .stat-label  { color: rgba(216,239,223,0.38); }
+    .theme-d .hero .panel-label { color: rgba(216,239,223,0.30); }
+    .theme-d .hero .clock-card  { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+    .theme-d .hero .clock-city  { color: rgba(216,239,223,0.40); }
+    .theme-d .hero .clock-time  { color: #D8EFDF; }
+    .theme-d .hero .hero-badge  { background: rgba(90,191,136,0.14); border-color: rgba(90,191,136,0.28); color: #5ABF88; }
+    .theme-d .hero .badge-dot   { background: #5ABF88; }
+    .theme-d .hero .hero-stats  { border-top-color: rgba(255,255,255,0.08); }
+    .theme-d .hero .btn-accent  { background: #2D7A52; }
+    .theme-d .hero .btn-accent:hover { background: #3D9A68; }
+    .theme-d .hero .btn-outline { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.14); color: rgba(216,239,223,0.65); }
+
+    /* Theme D: footer text (footer is also dark nav-bg) */
+    .theme-d .footer-brand { color: rgba(255,255,255,0.28); }
+    .theme-d .footer-link  { color: rgba(255,255,255,0.25); }
+    .theme-d .footer-link:hover { color: rgba(255,255,255,0.60); }
+
+    /* Theme D: card shadows feel light not dark */
+    .theme-d .dept-card,
+    .theme-d .news-card,
+    .theme-d .widget,
+    .theme-d .ceo-widget {
+      box-shadow: 0 2px 12px rgba(14,31,22,0.07), inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+    .theme-d .dept-card:hover,
+    .theme-d .news-card:hover {
+      box-shadow: 0 6px 28px rgba(14,31,22,0.12), inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+    .theme-d .ceo-widget {
+      background: linear-gradient(135deg, #162B1E 0%, #1E3828 100%);
+      border-color: rgba(255,255,255,0.08);
+    }
+    .theme-d .ceo-widget .ceo-eyebrow { color: #5ABF88; }
+    .theme-d .ceo-widget .ceo-quote,
+    .theme-d .ceo-widget .ceo-name    { color: #D8EFDF; }
+    .theme-d .ceo-widget .ceo-role    { color: rgba(216,239,223,0.50); }
+    .theme-d .ceo-widget .ceo-ava     { background: #2D7A52; }
+
+    /* ─── BASE STYLES ───────────────────────────────────── */
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    /* ─── THEME SWITCHER ────────────────────────────────── */
+    .theme-switcher {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .theme-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 12px 6px 8px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.4px;
+      transition: all 0.2s;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--border-hi);
+      color: var(--text);
+    }
+
+    .theme-btn.active {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      background: var(--accent-dim);
+    }
+
+    .theme-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .swatch-a { background: #1C8C4E; }
+    .swatch-b { background: #2D8C5A; box-shadow: 0 0 0 1px rgba(255,255,255,0.15); }
+    .swatch-c { background: #00A85A; }
+    .swatch-d { background: linear-gradient(135deg, #162B1E 50%, #EEF6F1 50%); border: 1px solid rgba(255,255,255,0.2); }
+
+    /* ─── NAV ───────────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      text-decoration: none;
+      margin-right: 32px;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .nav-logo svg { display: block; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex: 1;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 6px 11px;
+      border-radius: 6px;
+      transition: all 0.15s;
+      white-space: nowrap;
+      letter-spacing: 0.1px;
+    }
+
+    .nav-link:hover { color: var(--text); background: var(--surface); }
+    .nav-link.active { color: var(--accent2); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .nav-search {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      color: var(--text);
+      font-size: 12.5px;
+      font-family: inherit;
+      width: 190px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .nav-search::placeholder { color: var(--text-dim); }
+    .nav-search:focus {
+      border-color: var(--accent);
+      background: var(--surface2);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+      width: 220px;
+    }
+
+    .nav-avatar {
+      width: 30px;
+      height: 30px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      border: 1.5px solid var(--border-hi);
+    }
+
+    /* ─── HERO ──────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 56px 28px 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--hero-bg, var(--bg));
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--hero-grad);
+      pointer-events: none;
+    }
+
+    /* Subtle grid pattern */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.35;
+      pointer-events: none;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 0%, transparent 80%);
+    }
+
+    .hero-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: end;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-hi);
+      border-radius: 100px;
+      padding: 5px 14px 5px 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--accent2);
+      margin-bottom: 20px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent2);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .hero-title-accent {
+      background: linear-gradient(135deg, var(--accent2) 0%, var(--text) 60%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 400px;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: white;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 10px 22px;
+      font-size: 13.5px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-accent:hover {
+      background: var(--accent2);
+      box-shadow: 0 4px 20px var(--glow-strong);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: var(--surface);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 20px;
+      font-size: 13.5px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-outline:hover {
+      color: var(--text);
+      border-color: var(--border-hi);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    /* Hero right panel */
+    .hero-right {
+      padding-bottom: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    .clock-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .clock-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.2s;
+    }
+
+    .clock-card:hover { border-color: var(--border-hi); }
+
+    .clock-flag { font-size: 17px; line-height: 1; }
+
+    .clock-city {
+      font-size: 10.5px;
+      color: var(--text-dim);
+      margin-bottom: 2px;
+    }
+
+    .clock-time {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.3px;
+    }
+
+    /* ─── LAYOUT ────────────────────────────────────────── */
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 28px 64px;
+    }
+
+    /* ─── QUICK CHIPS ───────────────────────────────────── */
+    .chips-row {
+      display: flex;
+      gap: 8px;
+      padding: 22px 0 32px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .chips-row::-webkit-scrollbar { display: none; }
+
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--chip-bg);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 7px 15px 7px 9px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+      cursor: pointer;
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      backdrop-filter: blur(8px);
+    }
+
+    .chip:hover {
+      border-color: var(--border-hi);
+      color: var(--text);
+      background: var(--surface);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px var(--glow);
+    }
+
+    .chip-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    /* ─── SECTION HEAD ──────────────────────────────────── */
+    .sec-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .sec-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .sec-more {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .sec-more:hover { color: var(--accent2); }
+
+    /* ─── DEPT CARDS ────────────────────────────────────── */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+
+    .dept-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(12px);
+      /* metallic top-edge highlight */
+      box-shadow:
+        inset 0 1px 0 var(--metal-hi),
+        0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .dept-card:hover {
+      border-color: var(--border-hi);
+      transform: translateY(-3px);
+      box-shadow:
+        inset 0 1px 0 var(--metal-hi),
+        0 8px 32px var(--glow),
+        0 0 0 1px var(--border-hi);
+    }
+
+    .dept-icon-wrap {
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dept-icon-bg {
+      position: absolute;
+      inset: 0;
+      background: var(--accent-dim);
+    }
+
+    .dept-icon-glow {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--accent2);
+      filter: blur(30px);
+      opacity: 0.15;
+    }
+
+    .dept-icon {
+      font-size: 36px;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 2px 8px var(--glow));
+    }
+
+    .dept-body { padding: 14px 16px 12px; }
+
+    .dept-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: -0.2px;
+    }
+
+    .dept-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .dept-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .dept-tag {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--tag-color);
+      background: var(--tag-bg);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+
+    .dept-arrow {
+      color: var(--accent);
+      font-size: 14px;
+      transition: transform 0.15s;
+    }
+
+    .dept-card:hover .dept-arrow { transform: translateX(3px); }
+
+    /* ─── TWO-COL ────────────────────────────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+    }
+
+    /* ─── NEWS ──────────────────────────────────────────── */
+    .news-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 var(--metal-hi);
+    }
+
+    .news-card:hover {
+      border-color: var(--border-hi);
+      transform: translateY(-2px);
+      box-shadow: inset 0 1px 0 var(--metal-hi), 0 6px 24px var(--glow);
+    }
+
+    .news-thumb {
+      width: 72px;
+      height: 64px;
+      border-radius: 8px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .news-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .news-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--tag-color);
+      background: var(--tag-bg);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+
+    .news-date { font-size: 11px; color: var(--text-dim); }
+
+    .news-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 3px;
+    }
+
+    .news-blurb {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ─── SIDEBAR ────────────────────────────────────────── */
+    .sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+    .widget {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 var(--metal-hi);
+    }
+
+    .widget-head {
+      padding: 13px 16px 11px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .widget-head-icon {
+      width: 22px;
+      height: 22px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .widget-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px;
+      cursor: pointer;
+      transition: background 0.12s;
+      text-decoration: none;
+    }
+
+    .widget-row:hover { background: var(--surface); }
+
+    .widget-row-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .widget-row-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .widget-row-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .widget-row-arrow {
+      color: var(--text-dim);
+      font-size: 14px;
+      margin-left: auto;
+    }
+
+    /* CEO Card */
+    .ceo-widget {
+      background: linear-gradient(135deg, var(--bg2) 0%, var(--surface) 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 var(--metal-hi);
+    }
+
+    .ceo-widget::before {
+      content: '';
+      position: absolute;
+      top: -24px;
+      right: -24px;
+      width: 96px;
+      height: 96px;
+      background: var(--accent2);
+      filter: blur(40px);
+      opacity: 0.1;
+    }
+
+    .ceo-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent2);
+      margin-bottom: 8px;
+    }
+
+    .ceo-quote {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    .ceo-identity { display: flex; align-items: center; gap: 10px; }
+
+    .ceo-ava {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: 50%;
+      border: 1.5px solid var(--border-hi);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .ceo-name { font-size: 12.5px; font-weight: 700; color: var(--text); }
+    .ceo-role { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+    /* HOF */
+    .hof-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+    }
+
+    .hof-rank {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .rank-1 { background: rgba(200,160,0,0.2); color: #D4A800; }
+    .rank-2 { background: rgba(180,180,180,0.15); color: #A0A8A4; }
+    .rank-3 { background: rgba(180,100,60,0.18); color: #B86040; }
+
+    .hof-ava {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-hi);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .hof-name { font-size: 12.5px; font-weight: 600; color: var(--text); }
+    .hof-dept { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    .hof-badge { font-size: 15px; margin-left: auto; }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    .footer {
+      background: var(--nav-bg);
+      border-top: 1px solid var(--border);
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--text-dim);
+    }
+
+    .footer-links { display: flex; gap: 18px; }
+
+    .footer-link {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 12px;
+      transition: color 0.15s;
+    }
+
+    .footer-link:hover { color: var(--text-muted); }
+
+    /* ─── ANIMATIONS ─────────────────────────────────────── */
+    .rise {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: rise 0.45s ease forwards;
+    }
+
+    @keyframes rise { to { opacity: 1; transform: none; } }
+
+    .hero-left > * { animation: rise 0.5s ease both; }
+    .hero-left > *:nth-child(1) { animation-delay: 0.05s; }
+    .hero-left > *:nth-child(2) { animation-delay: 0.12s; }
+    .hero-left > *:nth-child(3) { animation-delay: 0.18s; }
+    .hero-left > *:nth-child(4) { animation-delay: 0.24s; }
+    .hero-left > *:nth-child(5) { animation-delay: 0.30s; }
+
+    @media (max-width: 900px) {
+      .dept-grid   { grid-template-columns: 1fr 1fr; }
+      .two-col     { grid-template-columns: 1fr; }
+      .hero-inner  { grid-template-columns: 1fr; }
+      .hero-right  { display: none; }
+      .hero-title  { font-size: 38px; }
+      .theme-switcher { top: auto; bottom: 20px; flex-direction: row; right: 50%; transform: translateX(50%); }
+    }
+  </style>
+</head>
+<body class="theme-a">
+
+<!-- ── THEME SWITCHER ── -->
+<div class="theme-switcher">
+  <button class="theme-btn active" onclick="setTheme('a', this)">
+    <span class="theme-swatch swatch-a"></span> Onyx Forest
+  </button>
+  <button class="theme-btn" onclick="setTheme('b', this)">
+    <span class="theme-swatch swatch-b"></span> Graphite Steel
+  </button>
+  <button class="theme-btn" onclick="setTheme('c', this)">
+    <span class="theme-swatch swatch-c"></span> Carbon Jade
+  </button>
+  <button class="theme-btn" onclick="setTheme('d', this)">
+    <span class="theme-swatch swatch-d"></span> Classic Light
+  </button>
+</div>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <a class="nav-logo" href="#">
+    <!-- Real Gruve SVG logo (white fill for dark bg) -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="77" height="20" viewBox="0 0 77 20" fill="none">
+      <g clip-path="url(#clip0)">
+        <path d="M25.5893 16.8476L25.3416 16.0577C25.2129 15.6461 25.4235 15.3516 25.8643 15.3516H28.2536C29.9348 15.3516 30.9822 14.314 30.9822 12.4241V8.1839C30.9822 6.04625 29.6676 4.87991 27.9688 4.87991C26.27 4.87991 24.9554 6.10867 24.9554 7.91864C24.9554 9.72862 26.1861 11.1212 28.3277 11.1212H29.0532C29.4297 11.1212 29.6306 11.3689 29.5135 11.7629L29.2463 12.6347C29.1449 12.9643 28.9518 13.0931 28.6222 13.0931H28.0995C25.6829 13.0931 22.8529 11.367 22.8529 7.9362C22.8529 4.50543 25.0764 2.88855 27.9903 2.88855C30.9042 2.88855 33.0711 4.87991 33.0711 8.12734V12.4319C33.0711 15.5233 31.1148 17.3586 28.2848 17.3586H26.2447C25.9131 17.3586 25.6829 17.1928 25.601 16.8632L25.5913 16.8456L25.5893 16.8476Z" fill="currentColor"/>
+        <path d="M39.8312 3.1109H41.8616C42.2555 3.1109 42.4857 3.3391 42.4857 3.73503V4.45863C42.4857 4.85456 42.2555 5.08276 41.8616 5.08276H40.0516C39.1134 5.08276 37.9842 5.60547 37.9842 6.80887V12.4611C37.9842 12.8571 37.754 13.0853 37.36 13.0853H36.5233C36.1293 13.0853 35.8992 12.8571 35.8992 12.4611V6.66064C35.8992 4.50544 37.6175 3.1109 39.8234 3.1109H39.8312Z" fill="currentColor"/>
+        <path d="M44.4439 3.73503C44.4439 3.3391 44.6741 3.1109 45.068 3.1109H45.9048C46.2987 3.1109 46.5289 3.3391 46.5289 3.73503V8.69881C46.5289 10.3235 47.4475 11.3143 48.8811 11.3143C50.3146 11.3143 51.2333 10.3137 51.2333 8.69881V3.73503C51.2333 3.3391 51.4615 3.1109 51.8574 3.1109H52.6922C53.0881 3.1109 53.3163 3.3391 53.3163 3.73503V8.69881C53.3163 11.5249 51.5258 13.3154 48.8869 13.3154C46.248 13.3154 44.4576 11.5249 44.4576 8.69881V3.73503H44.44H44.4439Z" fill="currentColor"/>
+        <path d="M59.5478 12.82L55.6704 3.84622C55.4598 3.40543 55.6529 3.12067 56.1307 3.12067H57.0864C57.418 3.12067 57.6481 3.24939 57.7944 3.56146L60.3202 9.60966L62.8655 3.56146C63.0117 3.24939 63.2146 3.12067 63.5715 3.12067H64.4453C64.9231 3.12067 65.1065 3.41518 64.9056 3.84622L60.9814 12.82C60.8995 13.0307 60.5035 13.1145 60.2753 13.1145C60.0471 13.1145 59.659 13.0307 59.5498 12.82H59.5478Z" fill="currentColor"/>
+        <path d="M66.5225 7.93814C66.5225 5.15686 68.5801 2.89049 71.5584 2.89049C74.4255 2.87294 77.3179 5.00083 76.3915 7.13847C75.9683 8.12147 75.6094 8.58762 74.6166 9.54332C74.3046 9.81832 74.1485 9.97436 73.8365 9.97436H72.6682C72.1903 9.97436 72.0987 9.62523 72.44 9.28586C72.9822 8.7534 73.6336 7.99275 74.1856 7.17553C75.0028 5.96433 73.1012 4.88185 71.5662 4.88185C70.0312 4.88185 68.6543 6.25884 68.6543 7.92058C68.6543 9.58233 69.885 11.1231 72.3756 11.1231H76.4364C76.8772 11.1231 77.0976 11.4177 76.961 11.8311L76.7309 12.5547C76.6295 12.9312 76.3818 13.097 75.978 13.097H72.1474C68.7557 13.097 66.5244 10.8111 66.5244 7.94008L66.5225 7.93814Z" fill="currentColor"/>
+        <path d="M12.3402 16.7013H10.1363C9.93341 16.7013 9.76958 16.5355 9.76958 16.3346L9.6311 15.2795C9.6311 15.0766 9.79688 14.9128 9.99777 14.9128H12.2856C14.4447 14.9498 15.7027 13.0677 15.6578 11.0295C15.6208 9.48872 14.2438 7.85428 12.5333 7.81722C11.2012 7.78992 9.78518 7.74311 9.1708 9.30343C9.13374 9.3951 9.11619 9.48677 9.09669 9.57844V9.60574C9.06938 9.71496 9.05963 9.71496 9.04988 9.82614C9.02257 10.0836 9.05963 10.2669 8.60908 10.2474L7.77236 10.265C7.61633 10.265 7.4876 10.2474 7.37643 10.1558C7.30231 10.1011 7.26526 9.93536 7.26526 9.81639L7.29256 9.52187V9.48482C7.4954 8.35748 7.7158 8.01616 8.17414 7.43884C8.9465 6.46559 10.2689 6.01505 12.5118 6.00725C15.3594 6.00725 17.3625 8.38284 17.3722 11.0549C17.3898 14.3218 15.7924 16.6428 12.3363 16.7169V16.6994L12.3402 16.7013ZM2.53553 8.84703C2.52577 5.58011 4.11535 3.25913 7.57147 3.18501H9.70326C9.95096 3.18501 10.1538 3.38785 10.1538 3.6336L10.2923 4.53274C10.2923 4.78044 10.0894 4.98328 9.84174 4.98328H7.63583C5.47674 4.94623 4.21872 6.81861 4.26358 8.86459C4.30064 10.4054 5.67763 11.9287 7.38813 11.9657C8.72026 11.993 10.1363 12.1491 10.7506 10.5887L10.7877 10.4971L10.8423 10.2221C10.8599 10.1304 10.8794 10.0309 10.8794 9.93731C10.8969 9.74422 10.9437 9.62525 11.3104 9.6428L12.1471 9.62525C12.2953 9.62525 12.4319 9.6428 12.5509 9.73447C12.625 9.78908 12.6796 9.90805 12.6796 10.029L12.6425 10.3859C12.4397 11.5327 12.2193 11.8721 11.7512 12.4514C10.9788 13.4246 9.65645 13.7621 7.41349 13.7738C4.5659 13.7738 2.56283 11.5074 2.55308 8.84508H2.53553V8.84703ZM18.1563 0H1.75536C0.789914 0 0 0.789914 0 1.75341V18.1232C0 19.0964 0.789914 19.8766 1.75536 19.8766H18.1466C19.1198 19.8766 19.9019 19.0867 19.9019 18.1232V1.75341C19.9019 0.780162 19.112 0 18.1466 0H18.1563Z" fill="currentColor"/>
+      </g>
+      <defs>
+        <clipPath id="clip0">
+          <rect width="77" height="19.8766" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="#">Home</a>
+    <a class="nav-link" href="#">About Gruve</a>
+    <a class="nav-link" href="#">People & Culture</a>
+    <a class="nav-link" href="#">Our Practices</a>
+    <a class="nav-link" href="#">Go-to-Market</a>
+    <a class="nav-link" href="#">Departments</a>
+    <a class="nav-link" href="#">Hall of Fame</a>
+    <a class="nav-link" href="#">News & Events</a>
+  </div>
+  <div class="nav-actions">
+    <input class="nav-search" type="text" placeholder="Search LaunchPad…" />
+    <div class="nav-avatar">AD</div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Welcome back, Aryan — Thursday
+      </div>
+      <h1 class="hero-title">
+        The <span class="hero-title-accent">LaunchPad</span><br>for everything Gruve
+      </h1>
+      <p class="hero-sub">One hub for resources, culture, departments, tools, and everything you need to move fast and scale smart.</p>
+      <div class="hero-actions">
+        <a class="btn-accent" href="#">Explore Departments →</a>
+        <a class="btn-outline" href="#">New Joiners Hub</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-val">6</div>
+          <div class="stat-label">Depts</div>
+        </div>
+        <div>
+          <div class="stat-val">12</div>
+          <div class="stat-label">Offices</div>
+        </div>
+        <div>
+          <div class="stat-val">200+</div>
+          <div class="stat-label">Team</div>
+        </div>
+        <div>
+          <div class="stat-val">7</div>
+          <div class="stat-label">Countries</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="panel-label">Global Offices · Local Time</div>
+      <div class="clock-grid">
+        <div class="clock-card"><span class="clock-flag">🇺🇸</span><div><div class="clock-city">Redwood City</div><div class="clock-time" id="t-rc">—</div></div></div>
+        <div class="clock-card"><span class="clock-flag">🇺🇸</span><div><div class="clock-city">Dallas TX</div><div class="clock-time" id="t-da">—</div></div></div>
+        <div class="clock-card"><span class="clock-flag">🇦🇪</span><div><div class="clock-city">Dubai, UAE</div><div class="clock-time" id="t-du">—</div></div></div>
+        <div class="clock-card"><span class="clock-flag">🇸🇬</span><div><div class="clock-city">Singapore</div><div class="clock-time" id="t-sg">—</div></div></div>
+        <div class="clock-card"><span class="clock-flag">🇮🇳</span><div><div class="clock-city">Pune, India</div><div class="clock-time" id="t-pu">—</div></div></div>
+        <div class="clock-card"><span class="clock-flag">🇬🇧</span><div><div class="clock-city">London, UK</div><div class="clock-time" id="t-lo">—</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PAGE BODY ── -->
+<div class="page">
+
+  <!-- Quick chips -->
+  <div class="chips-row">
+    <a class="chip" href="#"><span class="chip-icon">📋</span>New Joiner Hub</a>
+    <a class="chip" href="#"><span class="chip-icon">📗</span>The Green Book</a>
+    <a class="chip" href="#"><span class="chip-icon">🎫</span>General Helpdesk</a>
+    <a class="chip" href="#"><span class="chip-icon">👥</span>People Skills App</a>
+    <a class="chip" href="#"><span class="chip-icon">🏛️</span>Our Facilities</a>
+    <a class="chip" href="#"><span class="chip-icon">📊</span>Go-to-Market Hub</a>
+    <a class="chip" href="#"><span class="chip-icon">🎓</span>L&D Courses</a>
+    <a class="chip" href="#"><span class="chip-icon">🔐</span>IT Support</a>
+  </div>
+
+  <!-- Depts -->
+  <div class="sec-head">
+    <h2 class="sec-title">Departmental Hub</h2>
+    <a class="sec-more" href="#">View all →</a>
+  </div>
+  <div class="dept-grid">
+    <a class="dept-card" href="#">
+      <div class="dept-icon-wrap"><div class="dept-icon-bg"></div><div class="dept-icon-glow"></div><span class="dept-icon">📣</span></div>
+      <div class="dept-body">
+        <div class="dept-name">Marketing</div>
+        <div class="dept-desc">Branding, campaigns, templates, and content strategy resources.</div>
+      </div>
+      <div class="dept-foot"><span class="dept-tag">Brand · Content</span><span class="dept-arrow">→</span></div>
+    </a>
+    <a class="dept-card" href="#">
+      <div class="dept-icon-wrap"><div class="dept-icon-bg"></div><div class="dept-icon-glow"></div><span class="dept-icon">💹</span></div>
+      <div class="dept-body">
+        <div class="dept-name">Finance</div>
+        <div class="dept-desc">Financial resources, reporting templates, and policy documents.</div>
+      </div>
+      <div class="dept-foot"><span class="dept-tag">Reports · Policy</span><span class="dept-arrow">→</span></div>
+    </a>
+    <a class="dept-card" href="#">
+      <div class="dept-icon-wrap"><div class="dept-icon-bg"></div><div class="dept-icon-glow"></div><span class="dept-icon">🚀</span></div>
+      <div class="dept-body">
+        <div class="dept-name">Sales</div>
+        <div class="dept-desc">Pitch decks, client materials, and revenue-driving resources.</div>
+      </div>
+      <div class="dept-foot"><span class="dept-tag">Pitches · Clients</span><span class="dept-arrow">→</span></div>
+    </a>
+    <a class="dept-card" href="#">
+      <div class="dept-icon-wrap"><div class="dept-icon-bg"></div><div class="dept-icon-glow"></div><span class="dept-icon">⚖️</span></div>
+      <div class="dept-body">
+        <div class="dept-name">Legal</div>
+        <div class="dept-desc">Contracts, compliance templates, and essential legal documentation.</div>
+      </div>
+      <div class="dept-foot"><span class="dept-tag">Contracts · Compliance</span><span class="dept-arrow">→</span></div>
+    </a>
+    <a class="dept-card" href="#">
+      <div class="dept-icon-wrap"><div class="dept-icon-bg"></div><div class="dept-icon-glow"></div><span class="dept-icon">💻</span></div>
+      <div class="dept-body">
+        <div class="dept-name">IT</div>
+        <div class="dept-desc">Tech support, software access, tools, and device resources.</div>
+      </div>
+      <div class="dept-foot"><span class="dept-tag">Tools · Support</span><span class="dept-arrow">→</span></div>
+    </a>
+    <a class="dept-card" href="#">
+      <div class="dept-icon-wrap"><div class="dept-icon-bg"></div><div class="dept-icon-glow"></div><span class="dept-icon">🎓</span></div>
+      <div class="dept-body">
+        <div class="dept-name">Learning & Dev</div>
+        <div class="dept-desc">Training programs, upskilling paths, and growth resources.</div>
+      </div>
+      <div class="dept-foot"><span class="dept-tag">Training · Growth</span><span class="dept-arrow">→</span></div>
+    </a>
+  </div>
+
+  <!-- News + Sidebar -->
+  <div class="two-col">
+    <div>
+      <div class="sec-head">
+        <h2 class="sec-title">News & Updates</h2>
+        <a class="sec-more" href="#">See all →</a>
+      </div>
+      <div class="news-list">
+        <a class="news-card" href="#">
+          <div class="news-thumb">🤝</div>
+          <div>
+            <div class="news-meta"><span class="news-tag">Partnership</span><span class="news-date">Apr 15, 2026</span></div>
+            <div class="news-title">StepFunction Joins Gruve: Unifying the Data Ecosystem</div>
+            <div class="news-blurb">Gruve welcomes StepFunction, expanding data engineering capabilities across North America.</div>
+          </div>
+        </a>
+        <a class="news-card" href="#">
+          <div class="news-thumb">🧠</div>
+          <div>
+            <div class="news-meta"><span class="news-tag">AI</span><span class="news-date">Apr 12, 2026</span></div>
+            <div class="news-title">New Advisors Join Gruve to Drive Real-World AI Adoption</div>
+            <div class="news-blurb">Two seasoned leaders join Gruve's advisory board to accelerate enterprise AI programs.</div>
+          </div>
+        </a>
+        <a class="news-card" href="#">
+          <div class="news-thumb">📈</div>
+          <div>
+            <div class="news-meta"><span class="news-tag">Growth</span><span class="news-date">Apr 8, 2026</span></div>
+            <div class="news-title">Gruve Achieves 3× Year-over-Year Revenue Growth in Q1</div>
+            <div class="news-blurb">Strong performance across all verticals as Gruve scales its AI-first consulting model globally.</div>
+          </div>
+        </a>
+        <a class="news-card" href="#">
+          <div class="news-thumb">🌏</div>
+          <div>
+            <div class="news-meta"><span class="news-tag">Expansion</span><span class="news-date">Apr 3, 2026</span></div>
+            <div class="news-title">Gruve Opens New Office in Singapore for APAC Markets</div>
+            <div class="news-blurb">Our newest regional hub will serve as the center of operations for Southeast Asia.</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <!-- CEO -->
+      <div class="ceo-widget">
+        <div class="ceo-eyebrow">Message from the CEO</div>
+        <div class="ceo-quote">"We're building a machine that keeps getting better — and that machine is all of you."</div>
+        <div class="ceo-identity">
+          <div class="ceo-ava">JD</div>
+          <div>
+            <div class="ceo-name">CEO, Gruve</div>
+            <div class="ceo-role">Read full message →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Useful Links -->
+      <div class="widget">
+        <div class="widget-head"><span class="widget-head-icon">🔗</span>Useful Links</div>
+        <a class="widget-row" href="#"><div class="widget-row-icon">🆕</div><div><div class="widget-row-name">New Joiner Hub</div><div class="widget-row-sub">All essential onboarding info</div></div><span class="widget-row-arrow">›</span></a>
+        <a class="widget-row" href="#"><div class="widget-row-icon">📗</div><div><div class="widget-row-name">The Green Book</div><div class="widget-row-sub">Gruve culture & core values</div></div><span class="widget-row-arrow">›</span></a>
+        <a class="widget-row" href="#"><div class="widget-row-icon">🎫</div><div><div class="widget-row-name">General Helpdesk</div><div class="widget-row-sub">Raise tickets with departments</div></div><span class="widget-row-arrow">›</span></a>
+        <a class="widget-row" href="#"><div class="widget-row-icon">👥</div><div><div class="widget-row-name">People Skills App</div><div class="widget-row-sub">Connect by skill set</div></div><span class="widget-row-arrow">›</span></a>
+      </div>
+
+      <!-- Hall of Fame -->
+      <div class="widget">
+        <div class="widget-head"><span class="widget-head-icon">🏆</span>Hall of Fame</div>
+        <div class="hof-row"><div class="hof-rank rank-1">1</div><div class="hof-ava">SR</div><div><div class="hof-name">Sarah R.</div><div class="hof-dept">Marketing</div></div><span class="hof-badge">🥇</span></div>
+        <div class="hof-row"><div class="hof-rank rank-2">2</div><div class="hof-ava">MK</div><div><div class="hof-name">Marcus K.</div><div class="hof-dept">Engineering</div></div><span class="hof-badge">🥈</span></div>
+        <div class="hof-row"><div class="hof-rank rank-3">3</div><div class="hof-ava">PL</div><div><div class="hof-name">Priya L.</div><div class="hof-dept">Sales</div></div><span class="hof-badge">🥉</span></div>
+        <div style="padding: 10px 16px;"><a class="sec-more" href="#">Full leaderboard →</a></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-brand">
+    <svg xmlns="http://www.w3.org/2000/svg" width="46" height="12" viewBox="0 0 77 20" style="color:var(--text-dim)">
+      <g clip-path="url(#clip-f)">
+        <path d="M25.5893 16.8476L25.3416 16.0577C25.2129 15.6461 25.4235 15.3516 25.8643 15.3516H28.2536C29.9348 15.3516 30.9822 14.314 30.9822 12.4241V8.1839C30.9822 6.04625 29.6676 4.87991 27.9688 4.87991C26.27 4.87991 24.9554 6.10867 24.9554 7.91864C24.9554 9.72862 26.1861 11.1212 28.3277 11.1212H29.0532C29.4297 11.1212 29.6306 11.3689 29.5135 11.7629L29.2463 12.6347C29.1449 12.9643 28.9518 13.0931 28.6222 13.0931H28.0995C25.6829 13.0931 22.8529 11.367 22.8529 7.9362C22.8529 4.50543 25.0764 2.88855 27.9903 2.88855C30.9042 2.88855 33.0711 4.87991 33.0711 8.12734V12.4319C33.0711 15.5233 31.1148 17.3586 28.2848 17.3586H26.2447C25.9131 17.3586 25.6829 17.1928 25.601 16.8632L25.5913 16.8456L25.5893 16.8476Z" fill="currentColor"/><path d="M39.8312 3.1109H41.8616C42.2555 3.1109 42.4857 3.3391 42.4857 3.73503V4.45863C42.4857 4.85456 42.2555 5.08276 41.8616 5.08276H40.0516C39.1134 5.08276 37.9842 5.60547 37.9842 6.80887V12.4611C37.9842 12.8571 37.754 13.0853 37.36 13.0853H36.5233C36.1293 13.0853 35.8992 12.8571 35.8992 12.4611V6.66064C35.8992 4.50544 37.6175 3.1109 39.8234 3.1109H39.8312Z" fill="currentColor"/><path d="M44.4439 3.73503C44.4439 3.3391 44.6741 3.1109 45.068 3.1109H45.9048C46.2987 3.1109 46.5289 3.3391 46.5289 3.73503V8.69881C46.5289 10.3235 47.4475 11.3143 48.8811 11.3143C50.3146 11.3143 51.2333 10.3137 51.2333 8.69881V3.73503C51.2333 3.3391 51.4615 3.1109 51.8574 3.1109H52.6922C53.0881 3.1109 53.3163 3.3391 53.3163 3.73503V8.69881C53.3163 11.5249 51.5258 13.3154 48.8869 13.3154C46.248 13.3154 44.4576 11.5249 44.4576 8.69881V3.73503H44.44H44.4439Z" fill="currentColor"/><path d="M59.5478 12.82L55.6704 3.84622C55.4598 3.40543 55.6529 3.12067 56.1307 3.12067H57.0864C57.418 3.12067 57.6481 3.24939 57.7944 3.56146L60.3202 9.60966L62.8655 3.56146C63.0117 3.24939 63.2146 3.12067 63.5715 3.12067H64.4453C64.9231 3.12067 65.1065 3.41518 64.9056 3.84622L60.9814 12.82C60.8995 13.0307 60.5035 13.1145 60.2753 13.1145C60.0471 13.1145 59.659 13.0307 59.5498 12.82H59.5478Z" fill="currentColor"/><path d="M66.5225 7.93814C66.5225 5.15686 68.5801 2.89049 71.5584 2.89049C74.4255 2.87294 77.3179 5.00083 76.3915 7.13847C75.9683 8.12147 75.6094 8.58762 74.6166 9.54332C74.3046 9.81832 74.1485 9.97436 73.8365 9.97436H72.6682C72.1903 9.97436 72.0987 9.62523 72.44 9.28586C72.9822 8.7534 73.6336 7.99275 74.1856 7.17553C75.0028 5.96433 73.1012 4.88185 71.5662 4.88185C70.0312 4.88185 68.6543 6.25884 68.6543 7.92058C68.6543 9.58233 69.885 11.1231 72.3756 11.1231H76.4364C76.8772 11.1231 77.0976 11.4177 76.961 11.8311L76.7309 12.5547C76.6295 12.9312 76.3818 13.097 75.978 13.097H72.1474C68.7557 13.097 66.5244 10.8111 66.5244 7.94008L66.5225 7.93814Z" fill="currentColor"/><path d="M12.3402 16.7013H10.1363C9.93341 16.7013 9.76958 16.5355 9.76958 16.3346L9.6311 15.2795C9.6311 15.0766 9.79688 14.9128 9.99777 14.9128H12.2856C14.4447 14.9498 15.7027 13.0677 15.6578 11.0295C15.6208 9.48872 14.2438 7.85428 12.5333 7.81722C11.2012 7.78992 9.78518 7.74311 9.1708 9.30343C9.13374 9.3951 9.11619 9.48677 9.09669 9.57844V9.60574C9.06938 9.71496 9.05963 9.71496 9.04988 9.82614C9.02257 10.0836 9.05963 10.2669 8.60908 10.2474L7.77236 10.265C7.61633 10.265 7.4876 10.2474 7.37643 10.1558C7.30231 10.1011 7.26526 9.93536 7.26526 9.81639L7.29256 9.52187V9.48482C7.4954 8.35748 7.7158 8.01616 8.17414 7.43884C8.9465 6.46559 10.2689 6.01505 12.5118 6.00725C15.3594 6.00725 17.3625 8.38284 17.3722 11.0549C17.3898 14.3218 15.7924 16.6428 12.3363 16.7169V16.6994L12.3402 16.7013ZM2.53553 8.84703C2.52577 5.58011 4.11535 3.25913 7.57147 3.18501H9.70326C9.95096 3.18501 10.1538 3.38785 10.1538 3.6336L10.2923 4.53274C10.2923 4.78044 10.0894 4.98328 9.84174 4.98328H7.63583C5.47674 4.94623 4.21872 6.81861 4.26358 8.86459C4.30064 10.4054 5.67763 11.9287 7.38813 11.9657C8.72026 11.993 10.1363 12.1491 10.7506 10.5887L10.7877 10.4971L10.8423 10.2221C10.8599 10.1304 10.8794 10.0309 10.8794 9.93731C10.8969 9.74422 10.9437 9.62525 11.3104 9.6428L12.1471 9.62525C12.2953 9.62525 12.4319 9.6428 12.5509 9.73447C12.625 9.78908 12.6796 9.90805 12.6796 10.029L12.6425 10.3859C12.4397 11.5327 12.2193 11.8721 11.7512 12.4514C10.9788 13.4246 9.65645 13.7621 7.41349 13.7738C4.5659 13.7738 2.56283 11.5074 2.55308 8.84508H2.53553V8.84703ZM18.1563 0H1.75536C0.789914 0 0 0.789914 0 1.75341V18.1232C0 19.0964 0.789914 19.8766 1.75536 19.8766H18.1466C19.1198 19.8766 19.9019 19.0867 19.9019 18.1232V1.75341C19.9019 0.780162 19.112 0 18.1466 0H18.1563Z" fill="currentColor"/>
+      </g>
+      <defs><clipPath id="clip-f"><rect width="77" height="19.8766" fill="white"/></clipPath></defs>
+    </svg>
+    <span>· The LaunchPad · © 2026</span>
+  </div>
+  <div class="footer-links">
+    <a class="footer-link" href="#">Privacy</a>
+    <a class="footer-link" href="#">Accessibility</a>
+    <a class="footer-link" href="#">IT Support</a>
+    <a class="footer-link" href="#">Feedback</a>
+  </div>
+</footer>
+
+<script>
+  // Theme switcher
+  function setTheme(t, btn) {
+    document.body.className = 'theme-' + t;
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // Live world clocks
+  const clocks = {
+    'rc': 'America/Los_Angeles',
+    'da': 'America/Chicago',
+    'du': 'Asia/Dubai',
+    'sg': 'Asia/Singapore',
+    'pu': 'Asia/Kolkata',
+    'lo': 'Europe/London',
+  };
+
+  function tick() {
+    const now = new Date();
+    Object.entries(clocks).forEach(([id, tz]) => {
+      const el = document.getElementById('t-' + id);
+      if (el) el.textContent = now.toLocaleTimeString('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: true });
+    });
+  }
+
+  tick();
+  setInterval(tick, 10000);
+
+  // Scroll reveal for cards
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'none';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.dept-card, .news-card').forEach((el, i) => {
+    el.style.cssText += `opacity:0;transform:translateY(16px);transition:opacity 0.4s ${i * 0.05}s ease,transform 0.4s ${i * 0.05}s ease,border-color 0.2s,box-shadow 0.2s`;
+    io.observe(el);
+  });
+</script>
+</body>
+</html>

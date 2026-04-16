@@ -1,0 +1,5 @@
+# Local Claude Code config — not needed in repo
+.claude/
+
+# macOS
+.DS_Store

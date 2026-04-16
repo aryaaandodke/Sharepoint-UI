@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The LaunchPad — Gruve · v2</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Adapted from Apple system — Gruve green replaces Apple Blue */
+      --accent:       #1C7A48;
+      --accent-light: #148040; /* on dark backgrounds */
+      --accent-dark:  #4DC87E; /* links on dark bg */
+      --accent-dim:   rgba(28, 122, 72, 0.10);
+
+      --bg-dark:      #0B1610;
+      --bg-mid:       #132019;
+      --bg-light:     #F2F5F3;
+      --bg-white:     #FFFFFF;
+
+      --text-dark:    #1d1d1f;
+      --text-muted:   rgba(0, 0, 0, 0.56);
+      --text-light:   #FFFFFF;
+      --text-light-2: rgba(255, 255, 255, 0.68);
+      --text-light-3: rgba(255, 255, 255, 0.38);
+
+      --nav-h: 48px;
+      --max-w: 980px;
+
+      --r-sm:   5px;
+      --r-md:   8px;
+      --r-lg:   12px;
+      --r-pill: 980px;
+
+      --shadow-card: rgba(0,0,0,0.14) 3px 5px 30px 0px;
+      --shadow-sm:   rgba(0,0,0,0.08) 0px 2px 12px 0px;
+
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+                   'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg-light); color: var(--text-dark); }
+
+    /* ─── NAV ─────────────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      background: rgba(11, 22, 16, 0.82);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      gap: 0;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: white;
+      margin-right: 28px;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    .nav-link {
+      color: rgba(255,255,255,0.82);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 400;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: color 0.15s;
+      white-space: nowrap;
+      letter-spacing: -0.12px;
+    }
+
+    .nav-link:hover { color: white; }
+    .nav-link.active { color: white; font-weight: 600; }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    .nav-search {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 8px;
+      padding: 5px 14px;
+      color: white;
+      font-size: 12px;
+      font-family: inherit;
+      width: 180px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .nav-search::placeholder { color: rgba(255,255,255,0.28); }
+    .nav-search:focus {
+      width: 220px;
+      border-color: rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 0 0 3px rgba(28,122,72,0.25);
+    }
+
+    .nav-avatar {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────── */
+    .hero {
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(6, 10, 8, 0.18) 0%,
+          rgba(8, 14, 10, 0.42) 55%,
+          var(--bg-dark) 100%
+        ),
+        url('assets/gruve-spark-banner-1.webp') center 40% / cover no-repeat;
+      text-align: center;
+      padding: 100px 22px 88px;
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Vignette edges — keeps text crisp over the streaky image */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(6,10,8,0.55) 100%),
+        linear-gradient(to right, rgba(6,10,8,0.45) 0%, transparent 25%, transparent 75%, rgba(6,10,8,0.45) 100%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    .hero-eyebrow {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--accent-dark);
+      letter-spacing: -0.224px;
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.07;
+      letter-spacing: -0.28px;
+      color: var(--text-light);
+      margin-bottom: 14px;
+    }
+
+    .hero-sub {
+      font-size: 21px;
+      font-weight: 400;
+      line-height: 1.19;
+      letter-spacing: 0.231px;
+      color: var(--text-light-2);
+      max-width: 560px;
+      margin: 0 auto 28px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+
+    .cta-fill {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--r-md);
+      padding: 8px 18px;
+      font-size: 17px;
+      font-weight: 400;
+      font-family: inherit;
+      letter-spacing: -0.374px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .cta-fill:hover { background: #1A9054; }
+
+    .cta-pill {
+      background: transparent;
+      color: var(--accent-dark);
+      border: 1px solid rgba(77,200,126,0.45);
+      border-radius: var(--r-pill);
+      padding: 8px 18px;
+      font-size: 17px;
+      font-weight: 400;
+      font-family: inherit;
+      letter-spacing: -0.374px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .cta-pill:hover { border-color: var(--accent-dark); background: rgba(77,200,126,0.05); }
+
+    /* Stats strip */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .stat-n {
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.10;
+      letter-spacing: -0.28px;
+      color: white;
+    }
+
+    .stat-l {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.224px;
+      color: var(--text-light-3);
+      margin-top: 4px;
+    }
+
+    /* ─── QUICK STRIP ──────────────────────────────────────── */
+    .quick-strip {
+      background: var(--bg-white);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      padding: 18px 22px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .quick-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.14);
+      border-radius: var(--r-pill);
+      padding: 6px 14px 6px 10px;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: -0.224px;
+      color: var(--text-dark);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .quick-pill:hover {
+      background: var(--bg-light);
+      border-color: rgba(0,0,0,0.22);
+    }
+
+    .qp-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      background: var(--bg-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    /* ─── SECTION CHROME ───────────────────────────────────── */
+    section { padding: 64px 22px; }
+    section.dark { background: var(--bg-dark); }
+    section.mid  { background: var(--bg-mid); }
+    section.light { background: var(--bg-light); }
+    section.white { background: var(--bg-white); }
+
+    .sec-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+
+    .sec-head {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .sec-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 8px;
+    }
+
+    .sec-eyebrow.on-dark  { color: var(--accent-dark); }
+    .sec-eyebrow.on-light { color: var(--accent); }
+
+    .sec-title {
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.10;
+      letter-spacing: -0.28px;
+    }
+
+    .sec-title.on-dark  { color: white; }
+    .sec-title.on-light { color: var(--text-dark); }
+
+    .sec-inline-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .sec-inline-title {
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.14;
+      letter-spacing: 0.196px;
+    }
+
+    .sec-inline-title.on-dark  { color: white; }
+    .sec-inline-title.on-light { color: var(--text-dark); }
+
+    .more-link {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.224px;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .more-link:hover { opacity: 0.7; text-decoration: underline; }
+    .more-link.on-dark  { color: var(--accent-dark); }
+    .more-link.on-light { color: var(--accent); }
+
+    /* ─── DEPT GRID ────────────────────────────────────────── */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .dept-card {
+      background: var(--bg-white);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .dept-card:hover {
+      transform: scale(1.015);
+      box-shadow: rgba(0,0,0,0.20) 4px 8px 40px 0px;
+    }
+
+    .dept-img {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Icon platform colors — each dept gets a distinct dark green shade */
+    .di-marketing  { background: #0F2118; }
+    .di-finance    { background: #0D1E16; }
+    .di-sales      { background: #101F17; }
+    .di-legal      { background: #0B1A12; }
+    .di-it         { background: #091510; }
+    .di-ld         { background: #0C1C14; }
+
+    .dept-glow {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: var(--accent);
+      border-radius: 50%;
+      filter: blur(28px);
+      opacity: 0.2;
+    }
+
+    .dept-emoji { position: relative; z-index: 1; }
+
+    .dept-body { padding: 16px 18px 12px; }
+
+    .dept-name {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.374px;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .dept-desc {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.224px;
+      color: var(--text-muted);
+      line-height: 1.43;
+    }
+
+    .dept-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .dept-tag {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.12px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border-radius: var(--r-sm);
+      padding: 2px 8px;
+    }
+
+    .dept-more {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.224px;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .dept-more:hover { text-decoration: underline; }
+
+    /* ─── NEWS + SIDEBAR TWO-COL ───────────────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 24px;
+    }
+
+    /* News cards */
+    .news-list { display: flex; flex-direction: column; gap: 1px; background: rgba(255,255,255,0.06); border-radius: var(--r-lg); overflow: hidden; }
+
+    .news-card {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 18px 20px;
+      background: rgba(255,255,255,0.03);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .news-card:hover { background: rgba(255,255,255,0.06); }
+
+    .news-thumb {
+      width: 72px;
+      height: 64px;
+      border-radius: var(--r-md);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .news-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent-dark);
+      margin-bottom: 5px;
+    }
+
+    .news-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.374px;
+      color: white;
+      line-height: 1.24;
+      margin-bottom: 4px;
+    }
+
+    .news-blurb {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.224px;
+      color: var(--text-light-2);
+      line-height: 1.43;
+    }
+
+    .news-date {
+      font-size: 12px;
+      color: var(--text-light-3);
+      margin-top: 6px;
+      letter-spacing: -0.12px;
+    }
+
+    /* Sidebar */
+    .sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+    /* CEO card */
+    .ceo-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--r-lg);
+      padding: 20px;
+    }
+
+    .ceo-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent-dark);
+      margin-bottom: 10px;
+    }
+
+    .ceo-quote {
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.47;
+      letter-spacing: -0.374px;
+      color: white;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    .ceo-id { display: flex; align-items: center; gap: 10px; }
+
+    .ceo-ava {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .ceo-name {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.224px;
+      color: white;
+    }
+
+    .ceo-role {
+      font-size: 12px;
+      letter-spacing: -0.12px;
+      color: var(--text-light-3);
+      margin-top: 1px;
+    }
+
+    /* Links widget */
+    .links-widget {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+
+    .widget-label {
+      padding: 13px 16px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light-3);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .widget-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.12s;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .widget-row:last-child { border-bottom: none; }
+    .widget-row:hover { background: rgba(255,255,255,0.04); }
+
+    .wr-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: rgba(28,122,72,0.20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .wr-name {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.224px;
+      color: white;
+      flex: 1;
+    }
+
+    .wr-arrow {
+      font-size: 13px;
+      color: var(--text-light-3);
+    }
+
+    /* ─── HOF SECTION ──────────────────────────────────────── */
+    .hof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .hof-card {
+      background: var(--bg-white);
+      border-radius: var(--r-lg);
+      padding: 20px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.2s;
+    }
+
+    .hof-card:hover { transform: translateY(-3px); }
+
+    .hof-medal { font-size: 32px; margin-bottom: 10px; }
+
+    .hof-ava {
+      width: 48px;
+      height: 48px;
+      background: var(--accent-dim);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 auto 10px;
+    }
+
+    .hof-name {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.374px;
+      color: var(--text-dark);
+    }
+
+    .hof-dept {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.224px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ─── CLOCKS ───────────────────────────────────────────── */
+    .clocks-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+
+    .clock-cell {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--r-md);
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .clock-flag { font-size: 22px; margin-bottom: 6px; }
+
+    .clock-time {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.374px;
+      color: white;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .clock-city {
+      font-size: 12px;
+      letter-spacing: -0.12px;
+      color: var(--text-light-3);
+      margin-top: 4px;
+    }
+
+    /* ─── FOOTER ───────────────────────────────────────────── */
+    .footer {
+      background: var(--bg-dark);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      letter-spacing: -0.12px;
+      color: var(--text-light-3);
+    }
+
+    .footer-links { display: flex; gap: 18px; }
+
+    .footer-link {
+      font-size: 12px;
+      letter-spacing: -0.12px;
+      color: var(--text-light-3);
+      text-decoration: none;
+    }
+
+    .footer-link:hover { color: var(--text-light-2); text-decoration: underline; }
+
+    /* ─── ANIMATIONS ───────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .hero-inner > * {
+      animation: fadeUp 0.55s ease both;
+    }
+
+    .hero-inner > *:nth-child(1) { animation-delay: 0.04s; }
+    .hero-inner > *:nth-child(2) { animation-delay: 0.10s; }
+    .hero-inner > *:nth-child(3) { animation-delay: 0.16s; }
+    .hero-inner > *:nth-child(4) { animation-delay: 0.22s; }
+    .hero-inner > *:nth-child(5) { animation-delay: 0.30s; }
+
+    /* ─── RESPONSIVE ───────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .dept-grid   { grid-template-columns: 1fr 1fr; }
+      .two-col     { grid-template-columns: 1fr; }
+      .hof-grid    { grid-template-columns: 1fr 1fr 1fr; }
+      .clocks-grid { grid-template-columns: repeat(3, 1fr); }
+      .hero-title  { font-size: 40px; }
+      .sec-title   { font-size: 28px; }
+    }
+
+    @media (max-width: 600px) {
+      .dept-grid     { grid-template-columns: 1fr; }
+      .hof-grid      { grid-template-columns: 1fr; }
+      .clocks-grid   { grid-template-columns: repeat(2, 1fr); }
+      .hero-title    { font-size: 32px; }
+      .hero-sub      { font-size: 17px; }
+      .hero-stats    { gap: 24px; }
+      .nav-links     { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <a class="nav-logo" href="#">
+    <img src="assets/gruve-logo.svg" width="70" height="18" alt="Gruve"
+         style="display:block; filter: brightness(0) invert(1);" />
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="#">Home</a>
+    <a class="nav-link" href="#">About Gruve</a>
+    <a class="nav-link" href="#">People & Culture</a>
+    <a class="nav-link" href="#">Our Practices</a>
+    <a class="nav-link" href="#">Go-to-Market</a>
+    <a class="nav-link" href="#">Departments</a>
+    <a class="nav-link" href="#">Hall of Fame</a>
+    <a class="nav-link" href="#">News & Events</a>
+  </div>
+  <div class="nav-right">
+    <input class="nav-search" type="text" placeholder="Search LaunchPad" />
+    <div class="nav-avatar">AD</div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Welcome back, Aryan · Thursday, April 16</div>
+    <h1 class="hero-title">The LaunchPad.</h1>
+    <p class="hero-sub">Everything you need to move fast, stay aligned, and do your best work at Gruve.</p>
+    <div class="hero-ctas">
+      <a class="cta-fill" href="#">Explore Departments</a>
+      <a class="cta-pill" href="#">New Joiners Hub ›</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-n">6</div>
+        <div class="stat-l">Departments</div>
+      </div>
+      <div>
+        <div class="stat-n">12</div>
+        <div class="stat-l">Global Offices</div>
+      </div>
+      <div>
+        <div class="stat-n">200+</div>
+        <div class="stat-l">Team Members</div>
+      </div>
+      <div>
+        <div class="stat-n">7</div>
+        <div class="stat-l">Countries</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── QUICK ACCESS STRIP ── -->
+<div class="quick-strip">
+  <a class="quick-pill" href="#"><span class="qp-icon">📋</span>New Joiner Hub</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">📗</span>The Green Book</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">🎫</span>General Helpdesk</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">👥</span>People Skills App</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">🏛️</span>Our Facilities</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">📊</span>Go-to-Market Hub</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">🎓</span>L&D Courses</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">🔐</span>IT Support</a>
+</div>
+
+<!-- ── DEPARTMENTAL HUB — light section ── -->
+<section class="light">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="sec-eyebrow on-light">Internal Resources</div>
+      <h2 class="sec-title on-light">Departmental Hub</h2>
+    </div>
+    <div class="dept-grid">
+      <a class="dept-card" href="#">
+        <div class="dept-img di-marketing"><div class="dept-glow"></div><span class="dept-emoji">📣</span></div>
+        <div class="dept-body"><div class="dept-name">Marketing</div><div class="dept-desc">Branding, campaigns, templates, and content strategy resources for the Gruve brand.</div></div>
+        <div class="dept-foot"><span class="dept-tag">Brand · Content</span><a class="dept-more" href="#">Learn more ›</a></div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-img di-finance"><div class="dept-glow"></div><span class="dept-emoji">💹</span></div>
+        <div class="dept-body"><div class="dept-name">Finance</div><div class="dept-desc">Financial resources, reporting templates, and policy documentation at your fingertips.</div></div>
+        <div class="dept-foot"><span class="dept-tag">Reports · Policy</span><a class="dept-more" href="#">Learn more ›</a></div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-img di-sales"><div class="dept-glow"></div><span class="dept-emoji">🚀</span></div>
+        <div class="dept-body"><div class="dept-name">Sales</div><div class="dept-desc">Pitch decks, client materials, and revenue-driving assets for the sales team.</div></div>
+        <div class="dept-foot"><span class="dept-tag">Pitches · Clients</span><a class="dept-more" href="#">Learn more ›</a></div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-img di-legal"><div class="dept-glow"></div><span class="dept-emoji">⚖️</span></div>
+        <div class="dept-body"><div class="dept-name">Legal</div><div class="dept-desc">Contracts, compliance templates, and all essential legal documentation.</div></div>
+        <div class="dept-foot"><span class="dept-tag">Contracts · Compliance</span><a class="dept-more" href="#">Learn more ›</a></div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-img di-it"><div class="dept-glow"></div><span class="dept-emoji">💻</span></div>
+        <div class="dept-body"><div class="dept-name">IT</div><div class="dept-desc">Tech support, device access, software tools, and IT infrastructure resources.</div></div>
+        <div class="dept-foot"><span class="dept-tag">Tools · Support</span><a class="dept-more" href="#">Learn more ›</a></div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-img di-ld"><div class="dept-glow"></div><span class="dept-emoji">🎓</span></div>
+        <div class="dept-body"><div class="dept-name">Learning & Dev</div><div class="dept-desc">Training programs, upskilling paths, and growth resources for every Gruvian.</div></div>
+        <div class="dept-foot"><span class="dept-tag">Training · Growth</span><a class="dept-more" href="#">Learn more ›</a></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── NEWS + SIDEBAR — dark section ── -->
+<section class="dark">
+  <div class="sec-inner">
+    <div class="two-col">
+      <div>
+        <div class="sec-inline-head">
+          <h2 class="sec-inline-title on-dark">News & Updates</h2>
+          <a class="more-link on-dark" href="#">See all ›</a>
+        </div>
+        <div class="news-list">
+          <a class="news-card" href="#">
+            <div class="news-thumb">🤝</div>
+            <div>
+              <div class="news-tag">Partnership</div>
+              <div class="news-title">StepFunction Joins Gruve: Unifying the Data Ecosystem</div>
+              <div class="news-blurb">Gruve welcomes StepFunction, expanding data engineering capabilities across North America.</div>
+              <div class="news-date">April 15, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="#">
+            <div class="news-thumb">🧠</div>
+            <div>
+              <div class="news-tag">AI</div>
+              <div class="news-title">New Advisors Join Gruve to Drive Real-World AI Adoption</div>
+              <div class="news-blurb">Two seasoned leaders join Gruve's advisory board to accelerate enterprise AI programs.</div>
+              <div class="news-date">April 12, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="#">
+            <div class="news-thumb">📈</div>
+            <div>
+              <div class="news-tag">Growth</div>
+              <div class="news-title">Gruve Achieves 3× Year-over-Year Revenue Growth in Q1</div>
+              <div class="news-blurb">Strong performance across all verticals as Gruve scales its AI-first consulting model globally.</div>
+              <div class="news-date">April 8, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="#">
+            <div class="news-thumb">🌏</div>
+            <div>
+              <div class="news-tag">Expansion</div>
+              <div class="news-title">Gruve Opens New Singapore Office for APAC Markets</div>
+              <div class="news-blurb">Our newest regional hub serves as the center of operations for Southeast Asia.</div>
+              <div class="news-date">April 3, 2026</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="ceo-card">
+          <div class="ceo-label">Message from the CEO</div>
+          <div class="ceo-quote">"We're building a machine that keeps getting better — and that machine is all of you."</div>
+          <div class="ceo-id">
+            <div class="ceo-ava">JD</div>
+            <div>
+              <div class="ceo-name">CEO, Gruve</div>
+              <div class="ceo-role">Read full message ›</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="links-widget">
+          <div class="widget-label">Useful Links</div>
+          <a class="widget-row" href="#"><div class="wr-icon">🆕</div><div class="wr-name">New Joiner Hub</div><span class="wr-arrow">›</span></a>
+          <a class="widget-row" href="#"><div class="wr-icon">📗</div><div class="wr-name">The Green Book</div><span class="wr-arrow">›</span></a>
+          <a class="widget-row" href="#"><div class="wr-icon">🎫</div><div class="wr-name">General Helpdesk</div><span class="wr-arrow">›</span></a>
+          <a class="widget-row" href="#"><div class="wr-icon">👥</div><div class="wr-name">People Skills App</div><span class="wr-arrow">›</span></a>
+          <a class="widget-row" href="#"><div class="wr-icon">🏛️</div><div class="wr-name">Our Facilities</div><span class="wr-arrow">›</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HALL OF FAME — light section ── -->
+<section class="white">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="sec-eyebrow on-light">Recognition</div>
+      <h2 class="sec-title on-light">Hall of Fame</h2>
+    </div>
+    <div class="hof-grid">
+      <div class="hof-card">
+        <div class="hof-medal">🥇</div>
+        <div class="hof-ava">SR</div>
+        <div class="hof-name">Sarah R.</div>
+        <div class="hof-dept">Marketing</div>
+      </div>
+      <div class="hof-card">
+        <div class="hof-medal">🥈</div>
+        <div class="hof-ava">MK</div>
+        <div class="hof-name">Marcus K.</div>
+        <div class="hof-dept">Engineering</div>
+      </div>
+      <div class="hof-card">
+        <div class="hof-medal">🥉</div>
+        <div class="hof-ava">PL</div>
+        <div class="hof-name">Priya L.</div>
+        <div class="hof-dept">Sales</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:28px;">
+      <a class="more-link on-light" href="#">View full leaderboard ›</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── GLOBAL CLOCKS — dark section ── -->
+<section class="dark">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="sec-eyebrow on-dark">Always In Sync</div>
+      <h2 class="sec-title on-dark">Global Offices</h2>
+    </div>
+    <div class="clocks-grid">
+      <div class="clock-cell"><div class="clock-flag">🇺🇸</div><div class="clock-time" id="t-rc">—</div><div class="clock-city">Redwood City</div></div>
+      <div class="clock-cell"><div class="clock-flag">🇺🇸</div><div class="clock-time" id="t-da">—</div><div class="clock-city">Dallas, TX</div></div>
+      <div class="clock-cell"><div class="clock-flag">🇮🇳</div><div class="clock-time" id="t-pu">—</div><div class="clock-city">Pune, India</div></div>
+      <div class="clock-cell"><div class="clock-flag">🇦🇪</div><div class="clock-time" id="t-du">—</div><div class="clock-city">Dubai, UAE</div></div>
+      <div class="clock-cell"><div class="clock-flag">🇸🇬</div><div class="clock-time" id="t-sg">—</div><div class="clock-city">Singapore</div></div>
+      <div class="clock-cell"><div class="clock-flag">🇬🇧</div><div class="clock-time" id="t-lo">—</div><div class="clock-city">London, UK</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-brand">
+    <img src="assets/gruve-logo.svg" width="44" height="11" alt="Gruve"
+         style="display:block; filter: brightness(0) invert(1); opacity: 0.35;" />
+    <span>The LaunchPad · © 2026 Gruve</span>
+  </div>
+  <div class="footer-links">
+    <a class="footer-link" href="#">Privacy</a>
+    <a class="footer-link" href="#">Accessibility</a>
+    <a class="footer-link" href="#">IT Support</a>
+    <a class="footer-link" href="#">Feedback</a>
+  </div>
+</footer>
+
+<script>
+  const clocks = {
+    'rc': 'America/Los_Angeles',
+    'da': 'America/Chicago',
+    'pu': 'Asia/Kolkata',
+    'du': 'Asia/Dubai',
+    'sg': 'Asia/Singapore',
+    'lo': 'Europe/London',
+  };
+
+  function tick() {
+    const now = new Date();
+    Object.entries(clocks).forEach(([id, tz]) => {
+      const el = document.getElementById('t-' + id);
+      if (el) el.textContent = now.toLocaleTimeString('en-US', {
+        timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: true
+      });
+    });
+  }
+
+  tick();
+  setInterval(tick, 10000);
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'none';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.06 });
+
+  document.querySelectorAll('.dept-card, .news-card, .hof-card, .clock-cell').forEach((el, i) => {
+    el.style.cssText += `opacity:0;transform:translateY(14px);transition:opacity 0.45s ${i * 0.04}s ease,transform 0.45s ${i * 0.04}s ease,box-shadow 0.22s,transform 0.22s`;
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
