@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The LaunchPad · Gruve</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep:     #020617;
+      --bg-panel:    #0a0f1e;
+      --bg-card:     rgba(255,255,255,0.035);
+      --glass-blur:  16px;
+      --border-dim:  rgba(255,255,255,0.07);
+      --border-glow: rgba(33,165,94,0.35);
+      --green:       #21a55e;
+      --green-light: #2dd47a;
+      --green-glow:  0 0 20px rgba(33,165,94,0.3);
+      --chrome-1:    rgba(255,255,255,0.12);
+      --chrome-2:    rgba(255,255,255,0.03);
+      --text-hi:     #f8fafc;
+      --text-mid:    #94a3b8;
+      --text-lo:     #475569;
+      --radius-sm:   8px;
+      --radius-md:   14px;
+      --radius-lg:   20px;
+      --transition:  200ms ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-hi);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1,h2,h3,h4,h5,h6 { font-family: 'Lexend', sans-serif; }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: rgba(33,165,94,0.3); border-radius: 3px; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 0 40px;
+      height: 64px;
+      background: rgba(2,6,23,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-dim);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .nav-brand img { height: 28px; width: auto; }
+    .nav-brand span {
+      font-family: 'Lexend', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-hi);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2px;
+      list-style: none;
+      flex: 1;
+    }
+    .nav-links a {
+      display: block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-mid);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      transition: color var(--transition), background var(--transition);
+      white-space: nowrap;
+    }
+    .nav-links a:hover { color: var(--text-hi); background: rgba(255,255,255,0.06); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-dim);
+      border-radius: 40px;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .search-bar:focus-within {
+      border-color: var(--green);
+      box-shadow: var(--green-glow);
+    }
+    .search-bar svg { color: var(--text-lo); flex-shrink: 0; }
+    .search-bar input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-hi);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px;
+      width: 160px;
+    }
+    .search-bar input::placeholder { color: var(--text-lo); }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), #0f4d2a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lexend', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      border: 1.5px solid rgba(33,165,94,0.4);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 40px;
+      font-family: 'Lexend', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-primary:hover {
+      background: var(--green-light);
+      box-shadow: var(--green-glow);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 24px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text-hi);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 40px;
+      font-family: 'Lexend', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+      text-decoration: none;
+    }
+    .btn-outline:hover {
+      background: rgba(33,165,94,0.08);
+      border-color: var(--green);
+      transform: translateY(-1px);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 40px 80px;
+      overflow: hidden;
+      background: var(--bg-deep);
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--green);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.08;
+      margin-bottom: 20px;
+      position: relative;
+      background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 60%, var(--green-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text-mid);
+      max-width: 560px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+      position: relative;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 64px;
+    }
+
+    .btn-hero-primary {
+      padding: 13px 28px;
+      font-size: 15px;
+    }
+
+    /* ─── STATS STRIP ─── */
+    .stats-strip {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(var(--glass-blur));
+      overflow: hidden;
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .stat-item {
+      flex: 1;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+    }
+    .stat-item + .stat-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; height: 60%;
+      width: 1px;
+      background: var(--border-dim);
+    }
+    .stat-num {
+      font-family: 'Lexend', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--green);
+      display: block;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-mid);
+      margin-top: 4px;
+    }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 80px 40px; }
+    section:nth-child(even) { background: var(--bg-panel); }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(26px, 3vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-hi);
+      margin-bottom: 10px;
+    }
+    .section-sub {
+      font-size: 16px;
+      color: var(--text-mid);
+      max-width: 520px;
+      line-height: 1.6;
+    }
+    .section-header { margin-bottom: 48px; }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* ─── GLASS CARD ─── */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-md);
+      transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--chrome-1) 0%, transparent 50%, var(--chrome-2) 100%);
+      pointer-events: none;
+    }
+    .glass-card:hover {
+      border-color: var(--border-glow);
+      box-shadow: var(--green-glow);
+      transform: translateY(-2px);
+    }
+
+    /* ─── QUICK ACCESS ─── */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 12px;
+    }
+
+    .quick-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 12px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.035);
+      border: 1px solid var(--border-dim);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition), background var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .quick-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(255,255,255,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .quick-item:hover {
+      border-color: var(--border-glow);
+      box-shadow: var(--green-glow);
+      transform: translateY(-3px);
+      background: rgba(33,165,94,0.07);
+    }
+    .quick-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(33,165,94,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green);
+    }
+    .quick-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-mid);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* ─── DEPT CARDS ─── */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .dept-card {
+      padding: 28px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .dept-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: rgba(33,165,94,0.1);
+      border: 1px solid rgba(33,165,94,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+    .dept-card:hover .dept-icon-wrap {
+      background: rgba(33,165,94,0.18);
+      box-shadow: 0 0 14px rgba(33,165,94,0.25);
+    }
+    .dept-icon-wrap img { width: 28px; height: 28px; object-fit: contain; }
+    .dept-tags {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .dept-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(33,165,94,0.1);
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1px solid rgba(33,165,94,0.2);
+    }
+    .dept-name {
+      font-family: 'Lexend', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-hi);
+      margin-bottom: 8px;
+    }
+    .dept-desc {
+      font-size: 13.5px;
+      color: var(--text-mid);
+      line-height: 1.55;
+    }
+
+    /* ─── SHIMMER ANIMATION ─── */
+    @keyframes shimmer {
+      0%   { transform: translateX(-100%) skewX(-20deg); }
+      100% { transform: translateX(200%) skewX(-20deg); }
+    }
+    .glass-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      transform: translateX(-100%) skewX(-20deg);
+      pointer-events: none;
+    }
+    .glass-card:hover::after {
+      animation: shimmer 0.7s ease forwards;
+    }
+
+    /* ─── INDUSTRY GRID ─── */
+    .industry-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+
+    .industry-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 16px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .industry-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .industry-icon img { width: 36px; height: 36px; object-fit: contain; filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(100deg); }
+    .industry-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-mid);
+      text-align: center;
+      line-height: 1.3;
+    }
+    .industry-card:hover .industry-name { color: var(--green-light); }
+
+    /* ─── NEWS ─── */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .news-card {
+      padding: 28px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .news-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .news-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+    .tag-partnership { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.2); }
+    .tag-ai          { color: #c084fc; background: rgba(192,132,252,0.1); border: 1px solid rgba(192,132,252,0.2); }
+    .tag-growth      { color: var(--green); background: rgba(33,165,94,0.1); border: 1px solid rgba(33,165,94,0.2); }
+    .tag-expansion   { color: #fb923c; background: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.2); }
+    .news-date { font-size: 12px; color: var(--text-lo); }
+    .news-title {
+      font-family: 'Lexend', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-hi);
+      line-height: 1.4;
+    }
+    .news-blurb { font-size: 14px; color: var(--text-mid); line-height: 1.55; }
+    .news-arrow {
+      font-size: 13px;
+      color: var(--green);
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+      transition: gap var(--transition);
+    }
+    .news-card:hover .news-arrow { gap: 8px; }
+
+    /* ─── HALL OF FAME ─── */
+    .hof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .hof-card {
+      padding: 32px 24px;
+      text-align: center;
+      cursor: default;
+    }
+    .hof-medal { font-size: 40px; margin-bottom: 14px; display: block; }
+    .hof-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lexend', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .hof-1 .hof-avatar { background: linear-gradient(135deg, #d97706, #fbbf24); border: 2px solid #fbbf24; box-shadow: 0 0 20px rgba(251,191,36,0.3); }
+    .hof-2 .hof-avatar { background: linear-gradient(135deg, #475569, #94a3b8); border: 2px solid #94a3b8; box-shadow: 0 0 20px rgba(148,163,184,0.2); }
+    .hof-3 .hof-avatar { background: linear-gradient(135deg, #92400e, #d97706); border: 2px solid #d97706; box-shadow: 0 0 20px rgba(217,119,6,0.2); }
+    .hof-name {
+      font-family: 'Lexend', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-hi);
+      margin-bottom: 6px;
+    }
+    .hof-dept { font-size: 13px; color: var(--text-mid); }
+    .hof-cta { text-align: center; }
+    .hof-cta a {
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .hof-cta a:hover { color: var(--green-light); }
+
+    /* ─── CLOCKS ─── */
+    .clocks-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+    }
+
+    .clock-card {
+      padding: 24px 16px;
+      text-align: center;
+    }
+    .clock-flag { font-size: 28px; margin-bottom: 10px; display: block; }
+    .clock-city {
+      font-family: 'Lexend', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-hi);
+      margin-bottom: 10px;
+    }
+    .clock-time {
+      font-family: 'Lexend', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+    }
+    .clock-date { font-size: 11px; color: var(--text-lo); margin-top: 4px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg-deep);
+      border-top: 1px solid var(--border-dim);
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-brand img {
+      height: 22px;
+      filter: brightness(0) invert(1);
+      opacity: 0.6;
+    }
+    .footer-copy { font-size: 13px; color: var(--text-lo); }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-lo);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: var(--green); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      .quick-grid { grid-template-columns: repeat(4, 1fr); }
+      .industry-grid { grid-template-columns: repeat(4, 1fr); }
+      .clocks-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; gap: 12px; }
+      .nav-links { display: none; }
+      section { padding: 60px 20px; }
+      .dept-grid { grid-template-columns: repeat(2, 1fr); }
+      .news-grid { grid-template-columns: 1fr; }
+      .hof-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .hero { padding: 80px 20px 60px; }
+      .quick-grid { grid-template-columns: repeat(4, 1fr); }
+      .dept-grid { grid-template-columns: 1fr; }
+      .industry-grid { grid-template-columns: repeat(3, 1fr); }
+      .clocks-grid { grid-template-columns: repeat(2, 1fr); }
+      footer { flex-direction: column; text-align: center; }
+      .stats-strip { flex-direction: column; }
+      .stat-item + .stat-item::before { left: 20%; top: 0; height: 1px; width: 60%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition-duration: 0ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a class="nav-brand" href="#">
+    <img src="assets/icon.svg" alt="Gruve" />
+    <span>The LaunchPad</span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About Gruve</a></li>
+    <li><a href="#">People &amp; Culture</a></li>
+    <li><a href="#">Our Practices</a></li>
+    <li><a href="#">Go-to-Market</a></li>
+    <li><a href="#dept">Departments</a></li>
+    <li><a href="#hof">Hall of Fame</a></li>
+    <li><a href="#news">News &amp; Events</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <div class="search-bar">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" placeholder="Search LaunchPad…" aria-label="Search LaunchPad" />
+    </div>
+    <div class="avatar" title="Aryan Dodke" role="button" tabindex="0" aria-label="User menu">AD</div>
+    <a href="#" class="btn-primary btn-hero-primary" style="padding:8px 16px; font-size:13px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      New Request
+    </a>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero" aria-label="Hero">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+  <p class="hero-eyebrow">Welcome back, Aryan · Thursday, April 17</p>
+
+  <h1>Your workspace,<br/>all in one place.</h1>
+
+  <p>Everything you need to move fast, stay aligned, and do your best work at Gruve.</p>
+
+  <div class="hero-ctas">
+    <a href="#dept" class="btn-primary btn-hero-primary">
+      Explore Departments
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="#" class="btn-outline">New Joiners Hub</a>
+  </div>
+
+  <div class="stats-strip" role="list">
+    <div class="stat-item" role="listitem">
+      <span class="stat-num">6</span>
+      <span class="stat-label">Departments</span>
+    </div>
+    <div class="stat-item" role="listitem">
+      <span class="stat-num">12</span>
+      <span class="stat-label">Global Offices</span>
+    </div>
+    <div class="stat-item" role="listitem">
+      <span class="stat-num">200+</span>
+      <span class="stat-label">Team Members</span>
+    </div>
+    <div class="stat-item" role="listitem">
+      <span class="stat-num">7</span>
+      <span class="stat-label">Countries</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── QUICK ACCESS ─── -->
+<section aria-label="Quick Access">
+  <div class="container">
+    <div class="quick-grid">
+
+      <a href="#" class="quick-item" aria-label="New Joiner Hub">
+        <span class="quick-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+        </span>
+        <span class="quick-label">New Joiner Hub</span>
+      </a>
+
+      <a href="#" class="quick-item" aria-label="The Green Book">
+        <span class="quick-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </span>
+        <span class="quick-label">The Green Book</span>
+      </a>
+
+      <a href="#" class="quick-item" aria-label="General Helpdesk">
+        <span class="quick-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+        </span>
+        <span class="quick-label">General Helpdesk</span>
+      </a>
+
+      <a href="#" class="quick-item" aria-label="People Skills App">
+        <span class="quick-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <span class="quick-label">People Skills App</span>
+      </a>
+
+      <a href="#" class="quick-item" aria-label="Our Facilities">
+        <span class="quick-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+        </span>
+        <span class="quick-label">Our Facilities</span>
+      </a>
+
+      <a href="#" class="quick-item" aria-label="Go-to-Market Hub">
+        <span class="quick-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </span>
+        <span class="quick-label">Go-to-Market Hub</span>
+      </a>
+
+      <a href="#" class="quick-item" aria-label="L&D Courses">
+        <span class="quick-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </span>
+        <span class="quick-label">L&amp;D Courses</span>
+      </a>
+
+      <a href="#" class="quick-item" aria-label="IT Support">
+        <span class="quick-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </span>
+        <span class="quick-label">IT Support</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── DEPARTMENTAL HUB ─── -->
+<section id="dept" aria-label="Departmental Hub">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Internal Resources</p>
+      <h2 class="section-title">Departmental Hub</h2>
+      <p class="section-sub">Find everything your team needs — from brand assets to compliance docs.</p>
+    </div>
+
+    <div class="dept-grid">
+
+      <a href="#" class="glass-card dept-card" aria-label="Marketing department">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/marketing.svg" alt="" aria-hidden="true" />
+        </div>
+        <div class="dept-tags">
+          <span class="dept-tag">Brand</span>
+          <span class="dept-tag">Content</span>
+        </div>
+        <p class="dept-name">Marketing</p>
+        <p class="dept-desc">Branding, campaigns, templates, and content strategy resources for the Gruve brand.</p>
+      </a>
+
+      <a href="#" class="glass-card dept-card" aria-label="Finance department">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/finance.svg" alt="" aria-hidden="true" />
+        </div>
+        <div class="dept-tags">
+          <span class="dept-tag">Reports</span>
+          <span class="dept-tag">Policy</span>
+        </div>
+        <p class="dept-name">Finance</p>
+        <p class="dept-desc">Financial resources, reporting templates, and policy documentation at your fingertips.</p>
+      </a>
+
+      <a href="#" class="glass-card dept-card" aria-label="Sales department">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/sales.svg" alt="" aria-hidden="true" />
+        </div>
+        <div class="dept-tags">
+          <span class="dept-tag">Pitches</span>
+          <span class="dept-tag">Clients</span>
+        </div>
+        <p class="dept-name">Sales</p>
+        <p class="dept-desc">Pitch decks, client materials, and revenue-driving assets for the sales team.</p>
+      </a>
+
+      <a href="#" class="glass-card dept-card" aria-label="People and HR department">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/hr.svg" alt="" aria-hidden="true" />
+        </div>
+        <div class="dept-tags">
+          <span class="dept-tag">People</span>
+          <span class="dept-tag">Culture</span>
+        </div>
+        <p class="dept-name">People &amp; HR</p>
+        <p class="dept-desc">Policies, onboarding, benefits, and the resources that make Gruve a great place to work.</p>
+      </a>
+
+      <a href="#" class="glass-card dept-card" aria-label="IT and Security department">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/cybersecurity.svg" alt="" aria-hidden="true" />
+        </div>
+        <div class="dept-tags">
+          <span class="dept-tag">Tools</span>
+          <span class="dept-tag">Support</span>
+        </div>
+        <p class="dept-name">IT &amp; Security</p>
+        <p class="dept-desc">Tech support, device access, software tools, and cybersecurity resources.</p>
+      </a>
+
+      <a href="#" class="glass-card dept-card" aria-label="Legal and Compliance department">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/compliance.svg" alt="" aria-hidden="true" />
+        </div>
+        <div class="dept-tags">
+          <span class="dept-tag">Legal</span>
+          <span class="dept-tag">Compliance</span>
+        </div>
+        <p class="dept-name">Legal &amp; Compliance</p>
+        <p class="dept-desc">Contracts, regulatory frameworks, and all essential compliance documentation.</p>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── MARKETS WE SERVE ─── -->
+<section aria-label="Markets We Serve">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">What We Do</p>
+      <h2 class="section-title">Markets We Serve</h2>
+      <p class="section-sub">Gruve's AI-first consulting practice spans industries where transformation matters most.</p>
+    </div>
+
+    <div class="industry-grid">
+
+      <a href="#" class="glass-card industry-card" aria-label="Healthcare">
+        <span class="industry-icon"><img src="assets/category-icons/healthcare.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Healthcare</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Aviation">
+        <span class="industry-icon"><img src="assets/category-icons/aviation.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Aviation</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Automotive">
+        <span class="industry-icon"><img src="assets/category-icons/automotive.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Automotive</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Logistics">
+        <span class="industry-icon"><img src="assets/category-icons/logistics.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Logistics</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Government">
+        <span class="industry-icon"><img src="assets/category-icons/government.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Government</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Insurance">
+        <span class="industry-icon"><img src="assets/category-icons/insurance.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Insurance</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Oil and Gas">
+        <span class="industry-icon"><img src="assets/category-icons/oil and gas.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Oil &amp; Gas</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Supply Chain">
+        <span class="industry-icon"><img src="assets/category-icons/supply chain.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Supply Chain</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Industrial Engineering">
+        <span class="industry-icon"><img src="assets/category-icons/industrial engineering.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Industrial Engineering</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Financial Services">
+        <span class="industry-icon"><img src="assets/category-icons/monetary.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Financial Services</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Regulatory">
+        <span class="industry-icon"><img src="assets/category-icons/regulatory.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Regulatory</span>
+      </a>
+      <a href="#" class="glass-card industry-card" aria-label="Economics">
+        <span class="industry-icon"><img src="assets/category-icons/economics.svg" alt="" aria-hidden="true" /></span>
+        <span class="industry-name">Economics</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── NEWS & UPDATES ─── -->
+<section id="news" aria-label="News and Updates">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Latest</p>
+      <h2 class="section-title">News &amp; Updates</h2>
+    </div>
+
+    <div class="news-grid">
+
+      <a href="#" class="glass-card news-card" aria-label="Read: StepFunction Joins Gruve">
+        <div class="news-meta">
+          <span class="news-tag tag-partnership">Partnership</span>
+          <span class="news-date">Apr 15, 2026</span>
+        </div>
+        <p class="news-title">StepFunction Joins Gruve: Unifying the Data Ecosystem</p>
+        <p class="news-blurb">Gruve welcomes StepFunction, expanding data engineering capabilities across North America.</p>
+        <span class="news-arrow">Read more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <a href="#" class="glass-card news-card" aria-label="Read: New Advisors Join Gruve">
+        <div class="news-meta">
+          <span class="news-tag tag-ai">AI</span>
+          <span class="news-date">Apr 12, 2026</span>
+        </div>
+        <p class="news-title">New Advisors Join Gruve to Drive Real-World AI Adoption</p>
+        <p class="news-blurb">Two seasoned leaders join Gruve's advisory board to accelerate enterprise AI programs.</p>
+        <span class="news-arrow">Read more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <a href="#" class="glass-card news-card" aria-label="Read: Gruve achieves 3x revenue growth">
+        <div class="news-meta">
+          <span class="news-tag tag-growth">Growth</span>
+          <span class="news-date">Apr 8, 2026</span>
+        </div>
+        <p class="news-title">Gruve Achieves 3× Year-over-Year Revenue Growth in Q1</p>
+        <p class="news-blurb">Strong performance across all verticals as Gruve scales its AI-first consulting model globally.</p>
+        <span class="news-arrow">Read more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <a href="#" class="glass-card news-card" aria-label="Read: Gruve opens Singapore office">
+        <div class="news-meta">
+          <span class="news-tag tag-expansion">Expansion</span>
+          <span class="news-date">Apr 3, 2026</span>
+        </div>
+        <p class="news-title">Gruve Opens New Singapore Office for APAC Markets</p>
+        <p class="news-blurb">Our newest regional hub serves as the center of operations for Southeast Asia.</p>
+        <span class="news-arrow">Read more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── HALL OF FAME ─── -->
+<section id="hof" aria-label="Hall of Fame">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Recognition</p>
+      <h2 class="section-title">Hall of Fame</h2>
+      <p class="section-sub">Celebrating the Gruvians who went above and beyond this quarter.</p>
+    </div>
+
+    <div class="hof-grid">
+
+      <div class="glass-card hof-card hof-1">
+        <span class="hof-medal" aria-label="Gold medal">🥇</span>
+        <div class="hof-avatar" aria-hidden="true">SR</div>
+        <p class="hof-name">Sarah R.</p>
+        <p class="hof-dept">Marketing</p>
+      </div>
+
+      <div class="glass-card hof-card hof-2">
+        <span class="hof-medal" aria-label="Silver medal">🥈</span>
+        <div class="hof-avatar" aria-hidden="true">MK</div>
+        <p class="hof-name">Marcus K.</p>
+        <p class="hof-dept">Engineering</p>
+      </div>
+
+      <div class="glass-card hof-card hof-3">
+        <span class="hof-medal" aria-label="Bronze medal">🥉</span>
+        <div class="hof-avatar" aria-hidden="true">PL</div>
+        <p class="hof-name">Priya L.</p>
+        <p class="hof-dept">Sales</p>
+      </div>
+
+    </div>
+
+    <div class="hof-cta">
+      <a href="#">View full leaderboard ›</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GLOBAL OFFICES ─── -->
+<section aria-label="Global Offices">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Always In Sync</p>
+      <h2 class="section-title">Global Offices</h2>
+    </div>
+
+    <div class="clocks-grid" id="clocks-grid">
+
+      <div class="glass-card clock-card" data-tz="America/Los_Angeles">
+        <span class="clock-flag" aria-hidden="true">🇺🇸</span>
+        <p class="clock-city">Redwood City</p>
+        <p class="clock-time" aria-live="polite">--:--:--</p>
+        <p class="clock-date">--</p>
+      </div>
+
+      <div class="glass-card clock-card" data-tz="America/Chicago">
+        <span class="clock-flag" aria-hidden="true">🇺🇸</span>
+        <p class="clock-city">Dallas, TX</p>
+        <p class="clock-time" aria-live="polite">--:--:--</p>
+        <p class="clock-date">--</p>
+      </div>
+
+      <div class="glass-card clock-card" data-tz="Asia/Kolkata">
+        <span class="clock-flag" aria-hidden="true">🇮🇳</span>
+        <p class="clock-city">Pune, India</p>
+        <p class="clock-time" aria-live="polite">--:--:--</p>
+        <p class="clock-date">--</p>
+      </div>
+
+      <div class="glass-card clock-card" data-tz="Asia/Dubai">
+        <span class="clock-flag" aria-hidden="true">🇦🇪</span>
+        <p class="clock-city">Dubai, UAE</p>
+        <p class="clock-time" aria-live="polite">--:--:--</p>
+        <p class="clock-date">--</p>
+      </div>
+
+      <div class="glass-card clock-card" data-tz="Asia/Singapore">
+        <span class="clock-flag" aria-hidden="true">🇸🇬</span>
+        <p class="clock-city">Singapore</p>
+        <p class="clock-time" aria-live="polite">--:--:--</p>
+        <p class="clock-date">--</p>
+      </div>
+
+      <div class="glass-card clock-card" data-tz="Europe/London">
+        <span class="clock-flag" aria-hidden="true">🇬🇧</span>
+        <p class="clock-city">London, UK</p>
+        <p class="clock-time" aria-live="polite">--:--:--</p>
+        <p class="clock-date">--</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-brand">
+    <img src="assets/gruve-logo.svg" alt="Gruve" />
+    <span class="footer-copy">The LaunchPad · © 2026 Gruve</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Accessibility</a></li>
+    <li><a href="#">IT Support</a></li>
+    <li><a href="#">Feedback</a></li>
+  </ul>
+</footer>
+
+<script>
+  /* ─── HERO CANVAS — animated grid + particles ─── */
+  (function () {
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles;
+
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+
+    function initParticles() {
+      particles = Array.from({ length: 60 }, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.5 + 0.4,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        a: Math.random() * 0.6 + 0.2,
+      }));
+    }
+
+    function drawGrid() {
+      const step = 60;
+      ctx.strokeStyle = 'rgba(33,165,94,0.045)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < W; x += step) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = 0; y < H; y += step) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+    }
+
+    function drawGlow() {
+      const grad = ctx.createRadialGradient(W / 2, H * 0.6, 0, W / 2, H * 0.6, W * 0.55);
+      grad.addColorStop(0, 'rgba(33,165,94,0.07)');
+      grad.addColorStop(1, 'rgba(33,165,94,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function tick() {
+      ctx.clearRect(0, 0, W, H);
+      drawGrid();
+      drawGlow();
+
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = W;
+        if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H;
+        if (p.y > H) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(33,165,94,${p.a})`;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(tick);
+    }
+
+    resize();
+    initParticles();
+    tick();
+    window.addEventListener('resize', () => { resize(); initParticles(); });
+  })();
+
+  /* ─── LIVE WORLD CLOCKS ─── */
+  function updateClocks() {
+    document.querySelectorAll('.clock-card').forEach(card => {
+      const tz = card.dataset.tz;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+      const dateStr = now.toLocaleDateString('en-GB', { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric' });
+      card.querySelector('.clock-time').textContent = timeStr;
+      card.querySelector('.clock-date').textContent = dateStr;
+    });
+  }
+  updateClocks();
+  setInterval(updateClocks, 1000);
+</script>
+</body>
+</html>

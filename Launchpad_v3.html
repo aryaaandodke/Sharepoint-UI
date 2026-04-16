@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The LaunchPad — Gruve</title>
+
+  <!-- Fonts: Cormorant Garamond (Waldenburg analog — whisper-thin display) + Inter (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── RESET ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── DESIGN TOKENS — ElevenLabs × Gruve ────────────────── */
+    /*
+     * ElevenLabs philosophy: near-white canvas, whisper-thin display type,
+     * multi-layer sub-0.1 shadows, warm undertones, pill CTAs.
+     * Gruve adaptation: warm off-white base, dark green (#062D1F) as primary
+     * brand accent replacing pure black. One deep dark section for contrast.
+     */
+    :root {
+      /* Canvas */
+      --white:        #FFFFFF;
+      --canvas:       #F8F6F3;          /* warm off-white — Gruve's warm stone */
+      --canvas-2:     #F2EFE9;          /* deeper warm — section alternate */
+      --canvas-card:  #FDFCFA;          /* card surface */
+
+      /* Brand — Gruve dark green replaces ElevenLabs black */
+      --brand:        #062D1F;          /* primary text + nav, ElevenLabs' #000000 */
+      --brand-mid:    #1C7A48;          /* accent / link green */
+      --brand-lite:   #21a55e;          /* icon native color, hover states */
+      --brand-dim:    rgba(6,45,31,0.07); /* button warm bg tint */
+
+      /* Text */
+      --text-1:       #0F1A14;          /* near-black-green headings */
+      --text-2:       #3A4A3E;          /* body, ElevenLabs' #4e4e4e */
+      --text-3:       #7A9083;          /* muted, ElevenLabs' #777169 */
+      --text-4:       rgba(15,26,20,0.38);
+
+      /* Borders */
+      --border:       rgba(6,45,31,0.10);
+      --border-2:     rgba(6,45,31,0.06);
+      --border-3:     #E2EBE6;
+
+      /* ElevenLabs shadow philosophy:
+         Always three layers: inset-border + outline-ring + soft-lift
+         All sub-0.1 opacity. Warm-tinted for featured elements. */
+      --shadow-card:  rgba(6,45,31,0.06) 0px 0px 0px 1px,
+                      rgba(6,45,31,0.04) 0px 1px 2px,
+                      rgba(6,45,31,0.03) 0px 4px 12px;
+      --shadow-hover: rgba(6,45,31,0.08) 0px 0px 0px 1px,
+                      rgba(6,45,31,0.05) 0px 2px 6px,
+                      rgba(6,45,31,0.05) 0px 8px 24px;
+      --shadow-btn:   rgba(6,45,31,0.35) 0px 0px 1px,
+                      rgba(6,45,31,0.04) 0px 4px 8px;
+      --shadow-warm:  rgba(6,45,31,0.04) 0px 6px 20px,
+                      rgba(6,45,31,0.06) 0px 0px 0px 0.5px inset;
+
+      /* Radii — generous, from ElevenLabs scale */
+      --r-sm:   8px;
+      --r-md:   12px;
+      --r-lg:   18px;
+      --r-xl:   24px;
+      --r-pill: 9999px;
+
+      /* Layout */
+      --max-w:  1040px;
+      --nav-h:  56px;
+
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body  { background: var(--white); color: var(--text-1); }
+
+    /* ─── NAV ──────────────────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      height: var(--nav-h);
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: saturate(180%) blur(16px);
+      -webkit-backdrop-filter: saturate(180%) blur(16px);
+      border-bottom: 1px solid var(--border-2);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 0;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      margin-right: 32px;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      gap: 2px;
+    }
+
+    .nav-link {
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 5px 11px;
+      border-radius: var(--r-sm);
+      transition: color 0.15s, background 0.15s;
+      white-space: nowrap;
+      letter-spacing: 0.10px;
+    }
+    .nav-link:hover { color: var(--brand); background: var(--brand-dim); }
+    .nav-link.active { color: var(--brand); font-weight: 600; }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .nav-search {
+      background: var(--canvas);
+      border: 1px solid var(--border-3);
+      border-radius: var(--r-pill);
+      padding: 6px 16px;
+      color: var(--text-1);
+      font-size: 13px;
+      font-family: inherit;
+      letter-spacing: 0.12px;
+      width: 176px;
+      outline: none;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-btn);
+    }
+    .nav-search::placeholder { color: var(--text-3); }
+    .nav-search:focus {
+      width: 210px;
+      border-color: var(--brand-mid);
+      box-shadow: 0 0 0 3px rgba(28,122,72,0.12);
+    }
+
+    /* ElevenLabs-style pill buttons */
+    .btn-pill-dark {
+      background: var(--brand);
+      color: white;
+      border: none;
+      border-radius: var(--r-pill);
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      letter-spacing: 0.12px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .btn-pill-dark:hover { opacity: 0.82; }
+
+    .nav-avatar {
+      width: 30px;
+      height: 30px;
+      background: var(--brand);
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────────── */
+    .hero {
+      background: var(--white);
+      background-image: url('assets/gruve-spark-banner-1.webp');
+      background-size: cover;
+      background-position: center 40%;
+      padding: 88px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* White wash + warm radial over the banner — keeps the light theme intact
+       while letting green spark streaks bleed through at ~15% */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.84) 0%,
+          rgba(255,255,255,0.90) 55%,
+          rgba(255,255,255,0.97) 100%
+        ),
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(28,122,72,0.07) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 15% 100%, rgba(6,45,31,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Badge — ElevenLabs small warm-pill above hero */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(33,165,94,0.08);
+      border: 1px solid rgba(33,165,94,0.20);
+      border-radius: var(--r-pill);
+      padding: 4px 14px 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12px;
+      color: var(--brand-mid);
+      margin-bottom: 24px;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      background: var(--brand-lite);
+      border-radius: 50%;
+    }
+
+    /* Cormorant Garamond weight 300 = Waldenburg 300 analog */
+    .hero-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 72px;
+      font-weight: 300;
+      line-height: 1.06;
+      letter-spacing: -1.5px;
+      color: var(--text-1);
+      margin-bottom: 18px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.60;
+      letter-spacing: 0.18px;
+      color: var(--text-2);
+      max-width: 520px;
+      margin: 0 auto 36px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 64px;
+    }
+
+    /* ElevenLabs warm stone CTA — adapted to Gruve warm green stone */
+    .cta-warm {
+      background: rgba(235,244,239,0.88);
+      color: var(--brand);
+      border: none;
+      border-radius: 30px;
+      padding: 11px 22px 11px 16px;
+      font-size: 15px;
+      font-weight: 500;
+      font-family: inherit;
+      letter-spacing: 0.12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow-warm);
+      transition: box-shadow 0.18s, background 0.18s;
+    }
+    .cta-warm:hover {
+      background: rgba(220,238,228,0.96);
+      box-shadow: rgba(6,45,31,0.07) 0px 8px 28px, rgba(6,45,31,0.08) 0px 0px 0px 0.5px inset;
+    }
+
+    .cta-outline {
+      background: var(--white);
+      color: var(--text-1);
+      border-radius: var(--r-pill);
+      padding: 11px 20px;
+      font-size: 15px;
+      font-weight: 500;
+      font-family: inherit;
+      letter-spacing: 0.12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      box-shadow: var(--shadow-btn);
+      transition: box-shadow 0.15s;
+    }
+    .cta-outline:hover {
+      box-shadow: rgba(6,45,31,0.45) 0px 0px 1px, rgba(6,45,31,0.07) 0px 6px 16px;
+    }
+
+    /* Stats — ElevenLabs border-top strip */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 56px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-2);
+    }
+
+    .stat-n {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 44px;
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      color: var(--text-1);
+    }
+
+    .stat-l {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.14px;
+      color: var(--text-3);
+      margin-top: 4px;
+    }
+
+    /* ─── QUICK ACCESS ─────────────────────────────────────────── */
+    .quick-strip {
+      background: var(--canvas);
+      border-top: 1px solid var(--border-3);
+      border-bottom: 1px solid var(--border-3);
+      padding: 18px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .quick-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--white);
+      border-radius: var(--r-pill);
+      padding: 7px 16px 7px 10px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12px;
+      color: var(--text-2);
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .quick-pill:hover {
+      color: var(--brand);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .qp-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--canvas);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    /* ─── SECTION CHROME ───────────────────────────────────────── */
+    /*
+     * ElevenLabs alternates white (#fff) and light gray (#f5f5f5).
+     * Adaptation: white and warm canvas (#F8F6F3).
+     * Generous vertical padding — "Apple-like generous whitespace".
+     */
+    .sec-white  { background: var(--white);   padding: 80px 24px; }
+    .sec-canvas { background: var(--canvas);  padding: 80px 24px; }
+    .sec-warm   { background: var(--canvas-2); padding: 80px 24px; } /* recognition */
+    .sec-dark   { background: var(--brand);   padding: 72px 24px; } /* contrast anchor */
+
+    .sec-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+
+    .sec-head {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    /* Eyebrow — small uppercase tag above heading */
+    .sec-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--brand-mid);
+      margin-bottom: 12px;
+    }
+
+    .sec-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 44px;
+      font-weight: 300;
+      line-height: 1.10;
+      letter-spacing: -0.8px;
+      color: var(--text-1);
+    }
+
+    .sec-title-dark {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 44px;
+      font-weight: 300;
+      line-height: 1.10;
+      letter-spacing: -0.8px;
+      color: rgba(255,255,255,0.95);
+    }
+
+    .sec-sub {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.60;
+      letter-spacing: 0.16px;
+      color: var(--text-3);
+      max-width: 440px;
+      margin: 12px auto 0;
+    }
+
+    .sec-inline-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .sec-inline-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 32px;
+      font-weight: 300;
+      line-height: 1.10;
+      letter-spacing: -0.5px;
+      color: var(--text-1);
+    }
+
+    .more-link {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12px;
+      color: var(--brand-mid);
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .more-link:hover { opacity: 0.7; text-decoration: underline; }
+
+    /* ─── DEPT HUB — icon cards ───────────────────────────────── */
+    /*
+     * ElevenLabs card: white, 20px radius, multi-layer shadow.
+     * Icon from assets/category-icons/ — already green (#21a55e).
+     */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .dept-card {
+      background: var(--canvas-card);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow 0.22s ease, transform 0.22s ease;
+      border: 1px solid transparent;
+    }
+    .dept-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+      border-color: rgba(33,165,94,0.14);
+    }
+
+    .dept-icon-wrap {
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--canvas);
+      border-bottom: 1px solid var(--border-3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle radial glow behind icon */
+    .dept-icon-wrap::before {
+      content: '';
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background: rgba(33,165,94,0.12);
+      border-radius: 50%;
+      filter: blur(24px);
+    }
+
+    .dept-icon-wrap img {
+      width: 52px;
+      height: 52px;
+      position: relative;
+      z-index: 1;
+      object-fit: contain;
+    }
+
+    .dept-body {
+      padding: 18px 20px 14px;
+      flex: 1;
+    }
+
+    .dept-name {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.12px;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+
+    .dept-desc {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.12px;
+      color: var(--text-2);
+      line-height: 1.58;
+    }
+
+    .dept-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      border-top: 1px solid var(--border-3);
+    }
+
+    .dept-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: var(--brand-mid);
+      background: rgba(28,122,72,0.08);
+      border-radius: var(--r-sm);
+      padding: 3px 9px;
+    }
+
+    .dept-arrow {
+      font-size: 13px;
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .dept-card:hover .dept-arrow { color: var(--brand-mid); }
+
+    /* ─── INDUSTRY PRACTICES ───────────────────────────────────── */
+    /*
+     * Compact 4-col grid showcasing Gruve's market verticals.
+     * Smaller icon cards — informational, not navigational.
+     */
+    .industry-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .industry-card {
+      background: var(--white);
+      border-radius: var(--r-md);
+      padding: 22px 16px 18px;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow 0.20s, transform 0.20s;
+    }
+    .industry-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .industry-icon {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+
+    .industry-name {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12px;
+      color: var(--text-2);
+      line-height: 1.35;
+    }
+
+    /* ─── NEWS + SIDEBAR ───────────────────────────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 288px;
+      gap: 24px;
+    }
+
+    /* ElevenLabs-style news list: outline ring shadow, generous radius */
+    .news-list {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-3);
+    }
+
+    .news-card {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px 22px;
+      background: var(--white);
+      text-decoration: none;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border-3);
+      transition: background 0.15s;
+    }
+    .news-card:last-child { border-bottom: none; }
+    .news-card:hover { background: var(--canvas); }
+
+    .news-thumb {
+      width: 68px;
+      height: 60px;
+      border-radius: var(--r-sm);
+      background: var(--canvas);
+      border: 1px solid var(--border-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .news-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--brand-mid);
+      margin-bottom: 5px;
+    }
+
+    .news-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.12px;
+      color: var(--text-1);
+      line-height: 1.30;
+      margin-bottom: 4px;
+    }
+
+    .news-blurb {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.12px;
+      color: var(--text-2);
+      line-height: 1.55;
+    }
+
+    .news-date {
+      font-size: 12px;
+      color: var(--text-3);
+      margin-top: 6px;
+      letter-spacing: 0.10px;
+    }
+
+    /* Sidebar */
+    .sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+    .ceo-card {
+      background: var(--white);
+      border: 1px solid var(--border-3);
+      border-top: 2.5px solid var(--brand-mid);
+      border-radius: var(--r-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .ceo-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: var(--brand-mid);
+      margin-bottom: 12px;
+    }
+
+    .ceo-quote {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 19px;
+      font-weight: 300;
+      line-height: 1.60;
+      letter-spacing: -0.10px;
+      color: var(--text-1);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    .ceo-id { display: flex; align-items: center; gap: 10px; }
+
+    .ceo-ava {
+      width: 32px;
+      height: 32px;
+      background: var(--brand);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .ceo-name {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.10px;
+      color: var(--text-1);
+    }
+
+    .ceo-role {
+      font-size: 12px;
+      letter-spacing: 0.10px;
+      color: var(--text-3);
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    /* Links widget */
+    .links-widget {
+      background: var(--white);
+      border: 1px solid var(--border-3);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .widget-label {
+      padding: 13px 17px 11px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: var(--text-3);
+      border-bottom: 1px solid var(--border-3);
+      background: var(--canvas);
+    }
+
+    .widget-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 17px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.12s;
+      border-bottom: 1px solid var(--border-3);
+    }
+    .widget-row:last-child { border-bottom: none; }
+    .widget-row:hover { background: var(--canvas); }
+
+    .wr-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: rgba(28,122,72,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .wr-name {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.12px;
+      color: var(--text-2);
+      flex: 1;
+    }
+
+    .wr-arrow {
+      font-size: 13px;
+      color: var(--text-3);
+    }
+
+    /* ─── HALL OF FAME — warm canvas section ───────────────────── */
+    .hof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .hof-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      padding: 28px 22px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .hof-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-3px);
+    }
+
+    .hof-medal { font-size: 28px; margin-bottom: 12px; }
+
+    .hof-ava {
+      width: 52px;
+      height: 52px;
+      background: rgba(28,122,72,0.08);
+      border: 2px solid rgba(28,122,72,0.30);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--brand-mid);
+      margin: 0 auto 12px;
+    }
+
+    .hof-name {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.12px;
+      color: var(--text-1);
+    }
+
+    .hof-dept {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.12px;
+      color: var(--text-3);
+      margin-top: 4px;
+    }
+
+    /* ─── GLOBAL CLOCKS — dark anchor section ──────────────────── */
+    /*
+     * One dark section provides the contrast anchor that stops the
+     * all-light ElevenLabs aesthetic from feeling flat.
+     * Uses Gruve brand dark green #062D1F.
+     */
+    .clocks-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+
+    .clock-cell {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--r-md);
+      padding: 18px 12px;
+      text-align: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .clock-cell:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(33,165,94,0.30);
+    }
+
+    .clock-flag { font-size: 22px; margin-bottom: 8px; }
+
+    .clock-time {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: -0.30px;
+      color: rgba(255,255,255,0.94);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .clock-city {
+      font-size: 12px;
+      letter-spacing: 0.10px;
+      color: rgba(255,255,255,0.38);
+      margin-top: 5px;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────── */
+    .footer {
+      background: var(--canvas);
+      border-top: 1px solid var(--border-3);
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.10px;
+      color: var(--text-3);
+    }
+
+    .footer-links { display: flex; gap: 20px; }
+
+    .footer-link {
+      font-size: 12px;
+      letter-spacing: 0.10px;
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-link:hover { color: var(--text-1); }
+
+    /* ─── DIVIDER ────────────────────────────────────────────────── */
+    .sec-divider {
+      height: 1px;
+      background: var(--border-3);
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+
+    /* ─── ANIMATIONS ─────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .hero-inner > * {
+      animation: fadeUp 0.50s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .hero-inner > *:nth-child(1) { animation-delay: 0.05s; }
+    .hero-inner > *:nth-child(2) { animation-delay: 0.12s; }
+    .hero-inner > *:nth-child(3) { animation-delay: 0.18s; }
+    .hero-inner > *:nth-child(4) { animation-delay: 0.24s; }
+    .hero-inner > *:nth-child(5) { animation-delay: 0.32s; }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .dept-grid      { grid-template-columns: 1fr 1fr; }
+      .industry-grid  { grid-template-columns: repeat(3, 1fr); }
+      .two-col        { grid-template-columns: 1fr; }
+      .hof-grid       { grid-template-columns: 1fr 1fr 1fr; }
+      .clocks-grid    { grid-template-columns: repeat(3, 1fr); }
+      .hero-title     { font-size: 52px; }
+      .sec-title      { font-size: 34px; }
+      .sec-title-dark { font-size: 34px; }
+    }
+
+    @media (max-width: 640px) {
+      .dept-grid      { grid-template-columns: 1fr; }
+      .industry-grid  { grid-template-columns: repeat(2, 1fr); }
+      .hof-grid       { grid-template-columns: 1fr; }
+      .clocks-grid    { grid-template-columns: repeat(2, 1fr); }
+      .hero-title     { font-size: 40px; }
+      .hero-sub       { font-size: 16px; }
+      .hero-stats     { gap: 28px; flex-wrap: wrap; }
+      .nav-links      { display: none; }
+      .sec-white, .sec-canvas, .sec-warm { padding: 56px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <a class="nav-logo" href="#">
+    <img src="assets/gruve-logo.svg" width="66" height="17" alt="Gruve"
+         style="display:block;" />
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="#">Home</a>
+    <a class="nav-link" href="#">About Gruve</a>
+    <a class="nav-link" href="#">People & Culture</a>
+    <a class="nav-link" href="#">Our Practices</a>
+    <a class="nav-link" href="#">Go-to-Market</a>
+    <a class="nav-link" href="#">Departments</a>
+    <a class="nav-link" href="#">Hall of Fame</a>
+    <a class="nav-link" href="#">News & Events</a>
+  </div>
+  <div class="nav-right">
+    <input class="nav-search" type="text" placeholder="Search LaunchPad…" />
+    <div class="nav-avatar">AD</div>
+    <a class="btn-pill-dark" href="#">+ New Request</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Welcome back, Aryan · Thursday, April 16
+    </div>
+    <h1 class="hero-title">Your workspace,<br>all in one place.</h1>
+    <p class="hero-sub">Everything you need to move fast, stay aligned, and do your best work at Gruve.</p>
+    <div class="hero-ctas">
+      <a class="cta-warm" href="#">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0">
+          <circle cx="7" cy="7" r="6" stroke="#1C7A48" stroke-width="1.5"/>
+          <path d="M5 7h4M7 5l2 2-2 2" stroke="#1C7A48" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Explore Departments
+      </a>
+      <a class="cta-outline" href="#">New Joiners Hub</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-n">6</div><div class="stat-l">Departments</div></div>
+      <div><div class="stat-n">12</div><div class="stat-l">Global Offices</div></div>
+      <div><div class="stat-n">200+</div><div class="stat-l">Team Members</div></div>
+      <div><div class="stat-n">7</div><div class="stat-l">Countries</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── QUICK ACCESS STRIP ── -->
+<div class="quick-strip">
+  <a class="quick-pill" href="#"><span class="qp-icon">📋</span>New Joiner Hub</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">📗</span>The Green Book</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">🎫</span>General Helpdesk</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">👥</span>People Skills App</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">🏛️</span>Our Facilities</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">📊</span>Go-to-Market Hub</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">🎓</span>L&amp;D Courses</a>
+  <a class="quick-pill" href="#"><span class="qp-icon">🔐</span>IT Support</a>
+</div>
+
+<!-- ── DEPARTMENTAL HUB — white section ── -->
+<section class="sec-white">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="sec-label">Internal Resources</div>
+      <h2 class="sec-title">Departmental Hub</h2>
+      <p class="sec-sub">Find everything your team needs — from brand assets to compliance docs.</p>
+    </div>
+    <div class="dept-grid">
+
+      <a class="dept-card" href="#">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/marketing.svg" alt="Marketing" />
+        </div>
+        <div class="dept-body">
+          <div class="dept-name">Marketing</div>
+          <div class="dept-desc">Branding, campaigns, templates, and content strategy resources for the Gruve brand.</div>
+        </div>
+        <div class="dept-foot"><span class="dept-tag">Brand · Content</span><span class="dept-arrow">Learn more ›</span></div>
+      </a>
+
+      <a class="dept-card" href="#">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/finance.svg" alt="Finance" />
+        </div>
+        <div class="dept-body">
+          <div class="dept-name">Finance</div>
+          <div class="dept-desc">Financial resources, reporting templates, and policy documentation at your fingertips.</div>
+        </div>
+        <div class="dept-foot"><span class="dept-tag">Reports · Policy</span><span class="dept-arrow">Learn more ›</span></div>
+      </a>
+
+      <a class="dept-card" href="#">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/sales.svg" alt="Sales" />
+        </div>
+        <div class="dept-body">
+          <div class="dept-name">Sales</div>
+          <div class="dept-desc">Pitch decks, client materials, and revenue-driving assets for the sales team.</div>
+        </div>
+        <div class="dept-foot"><span class="dept-tag">Pitches · Clients</span><span class="dept-arrow">Learn more ›</span></div>
+      </a>
+
+      <a class="dept-card" href="#">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/hr.svg" alt="People & HR" />
+        </div>
+        <div class="dept-body">
+          <div class="dept-name">People & HR</div>
+          <div class="dept-desc">Policies, onboarding, benefits, and the resources that make Gruve a great place to work.</div>
+        </div>
+        <div class="dept-foot"><span class="dept-tag">People · Culture</span><span class="dept-arrow">Learn more ›</span></div>
+      </a>
+
+      <a class="dept-card" href="#">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/cybersecurity.svg" alt="IT & Security" />
+        </div>
+        <div class="dept-body">
+          <div class="dept-name">IT & Security</div>
+          <div class="dept-desc">Tech support, device access, software tools, and cybersecurity resources.</div>
+        </div>
+        <div class="dept-foot"><span class="dept-tag">Tools · Support</span><span class="dept-arrow">Learn more ›</span></div>
+      </a>
+
+      <a class="dept-card" href="#">
+        <div class="dept-icon-wrap">
+          <img src="assets/category-icons/compliance.svg" alt="Legal & Compliance" />
+        </div>
+        <div class="dept-body">
+          <div class="dept-name">Legal & Compliance</div>
+          <div class="dept-desc">Contracts, regulatory frameworks, and all essential compliance documentation.</div>
+        </div>
+        <div class="dept-foot"><span class="dept-tag">Legal · Compliance</span><span class="dept-arrow">Learn more ›</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── INDUSTRY PRACTICES — canvas section ── -->
+<section class="sec-canvas">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="sec-label">What We Do</div>
+      <h2 class="sec-title">Markets We Serve</h2>
+      <p class="sec-sub">Gruve's AI-first consulting practice spans industries where transformation matters most.</p>
+    </div>
+    <div class="industry-grid">
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/healthcare.svg" alt="Healthcare" />
+        <span class="industry-name">Healthcare</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/aviation.svg" alt="Aviation" />
+        <span class="industry-name">Aviation</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/automotive.svg" alt="Automotive" />
+        <span class="industry-name">Automotive</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/logistics.svg" alt="Logistics" />
+        <span class="industry-name">Logistics</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/government.svg" alt="Government" />
+        <span class="industry-name">Government</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/insurance.svg" alt="Insurance" />
+        <span class="industry-name">Insurance</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/oil and gas.svg" alt="Oil & Gas" />
+        <span class="industry-name">Oil &amp; Gas</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/supply chain.svg" alt="Supply Chain" />
+        <span class="industry-name">Supply Chain</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/industrial engineering.svg" alt="Industrial Engineering" />
+        <span class="industry-name">Industrial Eng.</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/monetary.svg" alt="Financial Services" />
+        <span class="industry-name">Financial Services</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/regulatory.svg" alt="Regulatory" />
+        <span class="industry-name">Regulatory</span>
+      </a>
+
+      <a class="industry-card" href="#">
+        <img class="industry-icon" src="assets/category-icons/economics.svg" alt="Economics" />
+        <span class="industry-name">Economics</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── NEWS + SIDEBAR — white section ── -->
+<section class="sec-white">
+  <div class="sec-inner">
+    <div class="two-col">
+      <div>
+        <div class="sec-inline-head">
+          <h2 class="sec-inline-title">News & Updates</h2>
+          <a class="more-link" href="#">See all ›</a>
+        </div>
+        <div class="news-list">
+          <a class="news-card" href="#">
+            <div class="news-thumb">🤝</div>
+            <div>
+              <div class="news-tag">Partnership</div>
+              <div class="news-title">StepFunction Joins Gruve: Unifying the Data Ecosystem</div>
+              <div class="news-blurb">Gruve welcomes StepFunction, expanding data engineering capabilities across North America.</div>
+              <div class="news-date">April 15, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="#">
+            <div class="news-thumb">🧠</div>
+            <div>
+              <div class="news-tag">AI</div>
+              <div class="news-title">New Advisors Join Gruve to Drive Real-World AI Adoption</div>
+              <div class="news-blurb">Two seasoned leaders join Gruve's advisory board to accelerate enterprise AI programs.</div>
+              <div class="news-date">April 12, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="#">
+            <div class="news-thumb">📈</div>
+            <div>
+              <div class="news-tag">Growth</div>
+              <div class="news-title">Gruve Achieves 3× Year-over-Year Revenue Growth in Q1</div>
+              <div class="news-blurb">Strong performance across all verticals as Gruve scales its AI-first consulting model globally.</div>
+              <div class="news-date">April 8, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="#">
+            <div class="news-thumb">🌏</div>
+            <div>
+              <div class="news-tag">Expansion</div>
+              <div class="news-title">Gruve Opens New Singapore Office for APAC Markets</div>
+              <div class="news-blurb">Our newest regional hub serves as the center of operations for Southeast Asia.</div>
+              <div class="news-date">April 3, 2026</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="ceo-card">
+          <div class="ceo-label">From the CEO</div>
+          <div class="ceo-quote">"We're building a machine that keeps getting better — and that machine is all of you."</div>
+          <div class="ceo-id">
+            <div class="ceo-ava">JD</div>
+            <div>
+              <div class="ceo-name">CEO, Gruve</div>
+              <div class="ceo-role">Read full message ›</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="links-widget">
+          <div class="widget-label">Useful Links</div>
+          <a class="widget-row" href="#"><div class="wr-icon">🆕</div><div class="wr-name">New Joiner Hub</div><span class="wr-arrow">›</span></a>
+          <a class="widget-row" href="#"><div class="wr-icon">📗</div><div class="wr-name">The Green Book</div><span class="wr-arrow">›</span></a>
+          <a class="widget-row" href="#"><div class="wr-icon">🎫</div><div class="wr-name">General Helpdesk</div><span class="wr-arrow">›</span></a>
+          <a class="widget-row" href="#"><div class="wr-icon">👥</div><div class="wr-name">People Skills App</div><span class="wr-arrow">›</span></a>
+          <a class="widget-row" href="#"><div class="wr-icon">🏛️</div><div class="wr-name">Our Facilities</div><span class="wr-arrow">›</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HALL OF FAME — warm canvas section ── -->
+<section class="sec-warm">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="sec-label">Recognition</div>
+      <h2 class="sec-title">Hall of Fame</h2>
+      <p class="sec-sub">Celebrating the Gruvians who went above and beyond this quarter.</p>
+    </div>
+    <div class="hof-grid">
+      <div class="hof-card">
+        <div class="hof-medal">🥇</div>
+        <div class="hof-ava">SR</div>
+        <div class="hof-name">Sarah R.</div>
+        <div class="hof-dept">Marketing</div>
+      </div>
+      <div class="hof-card">
+        <div class="hof-medal">🥈</div>
+        <div class="hof-ava">MK</div>
+        <div class="hof-name">Marcus K.</div>
+        <div class="hof-dept">Engineering</div>
+      </div>
+      <div class="hof-card">
+        <div class="hof-medal">🥉</div>
+        <div class="hof-ava">PL</div>
+        <div class="hof-name">Priya L.</div>
+        <div class="hof-dept">Sales</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px;">
+      <a class="more-link" href="#">View full leaderboard ›</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── GLOBAL CLOCKS — dark contrast anchor ── -->
+<section class="sec-dark">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="sec-label" style="color:rgba(33,165,94,0.90);">Always In Sync</div>
+      <h2 class="sec-title-dark">Global Offices</h2>
+    </div>
+    <div class="clocks-grid">
+      <div class="clock-cell"><div class="clock-flag">🇺🇸</div><div class="clock-time" id="t-rc">—</div><div class="clock-city">Redwood City</div></div>
+      <div class="clock-cell"><div class="clock-flag">🇺🇸</div><div class="clock-time" id="t-da">—</div><div class="clock-city">Dallas, TX</div></div>
+      <div class="clock-cell"><div class="clock-flag">🇮🇳</div><div class="clock-time" id="t-pu">—</div><div class="clock-city">Pune, India</div></div>
+      <div class="clock-cell"><div class="clock-flag">🇦🇪</div><div class="clock-time" id="t-du">—</div><div class="clock-city">Dubai, UAE</div></div>
+      <div class="clock-cell"><div class="clock-flag">🇸🇬</div><div class="clock-time" id="t-sg">—</div><div class="clock-city">Singapore</div></div>
+      <div class="clock-cell"><div class="clock-flag">🇬🇧</div><div class="clock-time" id="t-lo">—</div><div class="clock-city">London, UK</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-brand">
+    <img src="assets/gruve-logo.svg" width="44" height="11" alt="Gruve"
+         style="display:block; opacity: 0.50;" />
+    <span>The LaunchPad · © 2026 Gruve</span>
+  </div>
+  <div class="footer-links">
+    <a class="footer-link" href="#">Privacy</a>
+    <a class="footer-link" href="#">Accessibility</a>
+    <a class="footer-link" href="#">IT Support</a>
+    <a class="footer-link" href="#">Feedback</a>
+  </div>
+</footer>
+
+<script>
+  /* ─── LIVE CLOCKS ── */
+  const clocks = {
+    rc: 'America/Los_Angeles',
+    da: 'America/Chicago',
+    pu: 'Asia/Kolkata',
+    du: 'Asia/Dubai',
+    sg: 'Asia/Singapore',
+    lo: 'Europe/London',
+  };
+
+  function tick() {
+    const now = new Date();
+    Object.entries(clocks).forEach(([id, tz]) => {
+      const el = document.getElementById('t-' + id);
+      if (el) el.textContent = now.toLocaleTimeString('en-US', {
+        timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: true
+      });
+    });
+  }
+
+  tick();
+  setInterval(tick, 10000);
+
+  /* ─── SCROLL REVEAL — ElevenLabs-style gentle fade-up ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'none';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll(
+    '.dept-card, .industry-card, .news-card, .hof-card, .clock-cell'
+  ).forEach((el, i) => {
+    el.style.cssText += [
+      'opacity:0',
+      'transform:translateY(10px)',
+      `transition:opacity 0.45s ${(i * 0.035).toFixed(3)}s cubic-bezier(0.22,1,0.36,1),`,
+      `transform 0.45s ${(i * 0.035).toFixed(3)}s cubic-bezier(0.22,1,0.36,1),`,
+      'box-shadow 0.22s ease,',
+      'border-color 0.22s ease',
+    ].join(';');
+    io.observe(el);
+  });
+</script>
+</body>
+</html>

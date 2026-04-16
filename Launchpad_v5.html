@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The LaunchPad · Gruve</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ===== TOKENS ===== */
+    :root {
+      --bg-base:        #050d08;
+      --bg-panel:       #091410;
+      --bg-card:        rgba(255,255,255,0.028);
+      --bg-card-hover:  rgba(255,255,255,0.048);
+      --bg-surface:     rgba(255,255,255,0.04);
+
+      --text-primary:   #eaf2ec;
+      --text-secondary: #7da889;
+      --text-muted:     #3e5c47;
+
+      --accent:         #21a55e;
+      --accent-bright:  #2ec970;
+      --accent-dim:     rgba(33,165,94,0.1);
+      --accent-border:  rgba(33,165,94,0.22);
+
+      --border-subtle:  rgba(255,255,255,0.05);
+      --border-card:    rgba(255,255,255,0.075);
+      --border-strong:  rgba(255,255,255,0.11);
+
+      --r-sm:   4px;
+      --r-md:   6px;
+      --r-lg:   8px;
+      --r-xl:   12px;
+      --r-2xl:  18px;
+      --r-full: 9999px;
+
+      --font: 'Inter', -apple-system, system-ui, sans-serif;
+      --transition: 150ms ease;
+      --shadow-card: 0 1px 4px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04);
+      --shadow-hover: 0 6px 24px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.08);
+      --max-w: 1280px;
+      --nav-h: 64px;
+    }
+
+    /* ===== BASE ===== */
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.5;
+      font-feature-settings: 'cv01', 'ss03';
+      -webkit-font-smoothing: antialiased;
+    }
+    a  { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+    img { display: block; max-width: 100%; }
+    [id] { scroll-margin-top: calc(var(--nav-h) + 20px); }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+    .section     { padding: 80px 0; }
+    .section-alt { padding: 80px 0; background: var(--bg-panel); }
+
+    /* ===== SECTION HEADERS ===== */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    .section-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      max-width: 520px;
+    }
+    .section-header { margin-bottom: 36px; }
+
+    /* ===== ICON SIZING ===== */
+    .nav-search   svg { width: 13px !important; height: 13px !important; flex-shrink: 0; }
+    .btn-nav-cta  svg { width: 14px !important; height: 14px !important; }
+    .nav-mobile-toggle svg { width: 20px !important; height: 20px !important; }
+    .quick-icon   svg { width: 18px !important; height: 18px !important; }
+    .useful-link-icon svg { width: 14px !important; height: 14px !important; }
+    .dept-arrow   svg { width: 12px !important; height: 12px !important; }
+    .news-thumb   svg { width: 30px !important; height: 30px !important; }
+    .btn-outline  svg { width: 13px !important; height: 13px !important; }
+    svg { fill: none; }
+
+    /* ===== NAVIGATION ===== */
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 100;
+      height: var(--nav-h);
+      background: rgba(5,13,8,0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 250ms ease, background 250ms ease;
+    }
+    .nav.scrolled {
+      background: rgba(5,13,8,0.95);
+      border-bottom-color: var(--border-subtle);
+    }
+    .nav-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 28px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-right: 28px;
+      flex-shrink: 0;
+    }
+    .nav-logo img { height: 17px; width: auto; }
+    .nav-logo-sep {
+      width: 1px;
+      height: 16px;
+      background: var(--border-strong);
+      margin: 0 12px;
+    }
+    .nav-logo-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex: 1;
+    }
+    .nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding: 6px 10px;
+      border-radius: var(--r-md);
+      transition: color var(--transition), background var(--transition);
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text-primary); background: var(--bg-surface); }
+    .nav-link.active { color: var(--text-primary); }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .nav-search {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--r-md);
+      padding: 6px 10px;
+      cursor: text;
+      color: var(--text-muted);
+      transition: border-color var(--transition), background var(--transition);
+      width: 190px;
+    }
+    .nav-search:hover { border-color: var(--border-strong); background: var(--bg-surface); }
+    .nav-search-text { font-size: 12px; color: var(--text-muted); flex: 1; font-family: var(--font); }
+    .nav-search-kbd {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: var(--font);
+    }
+    .nav-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+      color: var(--accent-bright);
+      cursor: pointer; flex-shrink: 0;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .nav-avatar:hover { background: rgba(33,165,94,0.18); }
+    .btn-nav-cta {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px; font-weight: 500;
+      padding: 7px 14px;
+      border-radius: var(--r-md);
+      border: none;
+      transition: background var(--transition);
+      white-space: nowrap;
+    }
+    .btn-nav-cta:hover { background: var(--accent-bright); }
+    .nav-mobile-toggle {
+      display: none; background: none; border: none;
+      color: var(--text-secondary); cursor: pointer; padding: 4px;
+    }
+
+    /* ===== MOBILE NAV DRAWER ===== */
+    .mobile-nav {
+      display: none; position: fixed;
+      top: var(--nav-h); inset-inline: 0; bottom: 0;
+      background: var(--bg-panel);
+      z-index: 99; padding: 20px 24px;
+      flex-direction: column; gap: 4px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav-link {
+      font-size: 16px; font-weight: 500;
+      color: var(--text-secondary);
+      padding: 12px 10px;
+      border-radius: var(--r-md);
+      transition: color var(--transition), background var(--transition);
+    }
+    .mobile-nav-link:hover { color: var(--text-primary); background: var(--bg-surface); }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding-top: calc(var(--nav-h) + 88px);
+      padding-bottom: 88px;
+      position: relative; overflow: hidden;
+      text-align: center;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(to bottom, rgba(5,13,8,0.52) 0%, rgba(5,13,8,0.78) 55%, var(--bg-base) 100%),
+        url('assets/gruve-spark-banner-1.webp');
+      background-size: cover;
+      background-position: center 30%;
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: var(--max-w); margin: 0 auto; padding: 0 28px;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      border-radius: var(--r-full);
+      padding: 5px 14px;
+      margin-bottom: 28px;
+      letter-spacing: 0.01em;
+    }
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .hero-title {
+      font-size: clamp(40px, 5.5vw, 68px);
+      font-weight: 600;
+      letter-spacing: clamp(-0.8px, -0.022em, -1.5px);
+      color: var(--text-primary);
+      line-height: 1.04;
+      margin-bottom: 20px;
+    }
+    .hero-title-accent {
+      background: linear-gradient(135deg, #21a55e 0%, #2ec970 60%, #48e088 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-subtitle {
+      font-size: 18px; font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      max-width: 520px;
+      margin: 0 auto 40px;
+      letter-spacing: -0.1px;
+    }
+    .hero-cta {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin-bottom: 64px; flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px; font-weight: 500;
+      padding: 10px 22px;
+      border-radius: var(--r-md);
+      border: none;
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+    .btn-primary:hover {
+      background: var(--accent-bright);
+      box-shadow: 0 0 24px rgba(33,165,94,0.3);
+    }
+    .btn-ghost {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-size: 14px; font-weight: 500;
+      padding: 10px 22px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--border-card);
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .btn-ghost:hover { background: var(--bg-surface); border-color: var(--border-strong); }
+
+    /* Stats strip */
+    .stats-strip {
+      display: flex; align-items: stretch;
+      border: 1px solid var(--border-card);
+      border-radius: var(--r-xl);
+      background: rgba(5,13,8,0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow: hidden;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+    .stat-item {
+      flex: 1; padding: 20px 12px;
+      text-align: center;
+      border-right: 1px solid var(--border-subtle);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      display: block;
+      font-size: 28px; font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.4px;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .stat-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    /* ===== QUICK ACCESS ===== */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 10px;
+    }
+    .quick-item {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+      padding: 18px 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--r-lg);
+      cursor: pointer; text-align: center;
+      transition: background var(--transition), border-color var(--transition), transform 150ms ease, box-shadow var(--transition);
+    }
+    .quick-item:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-strong);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+    .quick-item:active { transform: translateY(0); }
+    .quick-icon {
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent-dim);
+      border-radius: var(--r-md);
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .quick-label {
+      font-size: 11px; font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    /* ===== DEPARTMENTS ===== */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .dept-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--r-xl);
+      padding: 26px;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), transform 150ms ease, box-shadow var(--transition);
+      display: flex; flex-direction: column; gap: 14px;
+      position: relative; overflow: hidden;
+    }
+    .dept-card::before {
+      content: '';
+      position: absolute;
+      inset: 0; border-radius: var(--r-xl);
+      background: radial-gradient(ellipse at top left, rgba(33,165,94,0.06), transparent 55%);
+      opacity: 0;
+      transition: opacity 300ms ease;
+    }
+    .dept-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(33,165,94,0.18);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+    .dept-card:hover::before { opacity: 1; }
+    .dept-icon-wrap {
+      width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      border-radius: var(--r-lg);
+      flex-shrink: 0;
+    }
+    .dept-icon-wrap img { width: 26px; height: 26px; object-fit: contain; }
+    .dept-tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag {
+      font-size: 10px; font-weight: 500;
+      color: var(--text-muted);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--r-sm);
+      padding: 2px 7px;
+      letter-spacing: 0.03em;
+    }
+    .dept-name {
+      font-size: 16px; font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+    }
+    .dept-desc {
+      font-size: 13px; font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .dept-arrow {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 500;
+      color: var(--accent);
+      margin-top: auto;
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .dept-card:hover .dept-arrow { opacity: 1; transform: translateX(0); }
+
+    /* ===== CONTENT LAYOUT (news + sidebar) ===== */
+    .content-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* ===== NEWS ===== */
+    .news-grid { display: flex; flex-direction: column; gap: 12px; }
+    .news-card {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--r-xl);
+      padding: 22px;
+      cursor: pointer; align-items: center;
+      transition: background var(--transition), border-color var(--transition), transform 150ms ease;
+    }
+    .news-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+    }
+    .news-thumb {
+      width: 76px; height: 76px;
+      border-radius: var(--r-lg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .news-thumb.clr-purple { background: rgba(139,92,246,0.1); color: #a78bfa; }
+    .news-thumb.clr-blue   { background: rgba(59,130,246,0.1);  color: #60a5fa; }
+    .news-thumb.clr-green  { background: rgba(33,165,94,0.1);   color: var(--accent-bright); }
+    .news-thumb.clr-amber  { background: rgba(245,158,11,0.1);  color: #fbbf24; }
+    .news-meta { display: flex; flex-direction: column; gap: 6px; }
+    .news-tag-row { display: flex; align-items: center; gap: 8px; }
+    .news-tag {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      border-radius: 3px; padding: 2px 7px;
+    }
+    .news-tag.t-partnership { background: rgba(139,92,246,0.14); color: #a78bfa; }
+    .news-tag.t-ai          { background: rgba(59,130,246,0.14);  color: #60a5fa; }
+    .news-tag.t-growth      { background: rgba(33,165,94,0.14);   color: var(--accent-bright); }
+    .news-tag.t-expansion   { background: rgba(245,158,11,0.14);  color: #fbbf24; }
+    .news-date { font-size: 11px; color: var(--text-muted); }
+    .news-title { font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.4; letter-spacing: -0.1px; }
+    .news-blurb { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--r-xl);
+      padding: 24px;
+    }
+    .ceo-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .ceo-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      color: var(--accent-bright); flex-shrink: 0;
+    }
+    .ceo-eyebrow {
+      font-size: 10px; font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .ceo-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .ceo-quote {
+      font-size: 15px; font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.7; font-style: italic;
+      padding-left: 14px;
+      border-left: 2px solid var(--accent);
+      margin-bottom: 16px;
+    }
+    .ceo-cta {
+      font-size: 13px; font-weight: 500;
+      color: var(--accent); cursor: pointer;
+      transition: color var(--transition);
+    }
+    .ceo-cta:hover { color: var(--accent-bright); }
+    .sidebar-section-label {
+      font-size: 10px; font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.09em; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .useful-links { display: flex; flex-direction: column; gap: 2px; }
+    .useful-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px;
+      border-radius: var(--r-md);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .useful-link:hover { background: var(--bg-surface); }
+    .useful-link-icon {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent-dim);
+      border-radius: var(--r-sm);
+      color: var(--accent); flex-shrink: 0;
+    }
+    .useful-link-label {
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      transition: color var(--transition);
+    }
+    .useful-link:hover .useful-link-label { color: var(--text-primary); }
+
+    /* ===== PRACTICES ===== */
+    .practices-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+    .practice-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--r-lg);
+      padding: 20px 12px;
+      cursor: pointer; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      transition: background var(--transition), border-color var(--transition), transform 150ms ease;
+    }
+    .practice-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-border);
+      transform: translateY(-3px);
+    }
+    .practice-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+    .practice-icon img { width: 36px; height: 36px; object-fit: contain; }
+    .practice-name { font-size: 12px; font-weight: 500; color: var(--text-secondary); line-height: 1.35; }
+
+    /* ===== HALL OF FAME ===== */
+    .hof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .hof-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--r-xl);
+      padding: 32px 24px;
+      text-align: center; cursor: pointer;
+      position: relative;
+      transition: background var(--transition), transform 150ms ease, box-shadow var(--transition);
+    }
+    .hof-card:hover { background: var(--bg-card-hover); transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .hof-card.gold   { border-color: rgba(212,160,23,0.22); }
+    .hof-card.silver { border-color: rgba(160,168,176,0.18); }
+    .hof-card.bronze { border-color: rgba(184,115,51,0.18); }
+    .hof-rank-badge {
+      position: absolute; top: 16px; left: 16px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.07em; text-transform: uppercase;
+    }
+    .hof-card.gold   .hof-rank-badge { color: #d4a017; }
+    .hof-card.silver .hof-rank-badge { color: #a0a8b0; }
+    .hof-card.bronze .hof-rank-badge { color: #b87333; }
+    .hof-rank-num {
+      font-size: 36px; line-height: 1;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .hof-card.gold   .hof-rank-num { color: #d4a017; }
+    .hof-card.silver .hof-rank-num { color: #a0a8b0; }
+    .hof-card.bronze .hof-rank-num { color: #b87333; }
+    .hof-avatar {
+      width: 54px; height: 54px; border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700;
+    }
+    .hof-card.gold   .hof-avatar { background: rgba(212,160,23,0.1); border: 1px solid rgba(212,160,23,0.28); color: #d4a017; }
+    .hof-card.silver .hof-avatar { background: rgba(160,168,176,0.1); border: 1px solid rgba(160,168,176,0.22); color: #a0a8b0; }
+    .hof-card.bronze .hof-avatar { background: rgba(184,115,51,0.1); border: 1px solid rgba(184,115,51,0.22); color: #b87333; }
+    .hof-name { font-size: 17px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .hof-dept { font-size: 12px; color: var(--text-secondary); }
+    .hof-footer { text-align: center; margin-top: 32px; }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: none; color: var(--text-secondary);
+      font-size: 13px; font-weight: 500;
+      padding: 9px 18px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--border-card);
+      transition: color var(--transition), border-color var(--transition), background var(--transition);
+    }
+    .btn-outline:hover { color: var(--text-primary); border-color: var(--border-strong); background: var(--bg-surface); }
+
+    /* ===== GLOBAL CLOCKS ===== */
+    .clocks-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+    .clock-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--r-xl);
+      padding: 22px 16px;
+      text-align: center;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .clock-card:hover { background: var(--bg-card-hover); border-color: var(--border-strong); }
+    .clock-flag { font-size: 24px; line-height: 1; margin-bottom: 12px; }
+    .clock-time {
+      font-size: 22px; font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: 'tnum';
+      line-height: 1; margin-bottom: 8px;
+    }
+    .clock-city { font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 3px; }
+    .clock-dot {
+      display: inline-block;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); margin-bottom: 4px;
+    }
+    .clock-tz { font-size: 10px; color: var(--text-muted); }
+
+    /* ===== FOOTER ===== */
+    .footer { border-top: 1px solid var(--border-subtle); padding: 28px 0; }
+    .footer-inner {
+      max-width: var(--max-w); margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 12px; }
+    .footer-brand img { height: 15px; width: auto; filter: brightness(0) invert(0.35); }
+    .footer-brand-text { font-size: 12px; color: var(--text-muted); }
+    .footer-links { display: flex; align-items: center; gap: 20px; }
+    .footer-link { font-size: 12px; color: var(--text-muted); transition: color var(--transition); }
+    .footer-link:hover { color: var(--text-secondary); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1200px) {
+      .quick-grid      { grid-template-columns: repeat(4, 1fr); }
+      .practices-grid  { grid-template-columns: repeat(4, 1fr); }
+      .clocks-grid     { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1024px) {
+      .dept-grid       { grid-template-columns: repeat(2, 1fr); }
+      .content-layout  { grid-template-columns: 1fr; }
+      .sidebar         { display: grid; grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-links       { display: none; }
+      .nav-search      { display: none; }
+      .nav-mobile-toggle { display: flex; }
+      .btn-nav-cta .cta-label { display: none; }
+      .hero-title      { font-size: 36px; }
+      .section-title   { font-size: 26px; }
+      .section         { padding: 56px 0; }
+      .section-alt     { padding: 56px 0; }
+      .dept-grid       { grid-template-columns: 1fr; }
+      .hof-grid        { grid-template-columns: 1fr; }
+      .clocks-grid     { grid-template-columns: repeat(2, 1fr); }
+      .practices-grid  { grid-template-columns: repeat(3, 1fr); }
+      .sidebar         { grid-template-columns: 1fr; }
+      .news-card       { grid-template-columns: 1fr; }
+      .news-thumb      { display: none; }
+    }
+    @media (max-width: 520px) {
+      .container       { padding: 0 16px; }
+      .stats-strip     { max-width: 300px; }
+      .stat-item       { padding: 16px 8px; }
+      .stat-number     { font-size: 22px; }
+      .quick-grid      { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      .practices-grid  { grid-template-columns: repeat(2, 1fr); }
+      .clocks-grid     { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" id="main-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="Gruve LaunchPad — Home">
+        <img src="assets/icon.svg" alt="Gruve" width="77" height="20">
+        <div class="nav-logo-sep" aria-hidden="true"></div>
+        <span class="nav-logo-label">The LaunchPad</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#"               class="nav-link active">Home</a>
+        <a href="#departments"    class="nav-link">Departments</a>
+        <a href="#practices"      class="nav-link">Our Practices</a>
+        <a href="#news"           class="nav-link">News &amp; Events</a>
+        <a href="#hall-of-fame"   class="nav-link">Hall of Fame</a>
+        <a href="#global-offices" class="nav-link">Global Offices</a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="nav-search" aria-label="Search LaunchPad (⌘K)">
+          <i data-lucide="search"></i>
+          <span class="nav-search-text">Search LaunchPad…</span>
+          <span class="nav-search-kbd" aria-hidden="true">⌘K</span>
+        </button>
+        <div class="nav-avatar" role="button" tabindex="0" aria-label="Account menu — Aryan Dodke">AD</div>
+        <button class="btn-nav-cta" aria-label="New Request">
+          <i data-lucide="plus"></i>
+          <span class="cta-label">New Request</span>
+        </button>
+        <button class="nav-mobile-toggle" id="mobile-toggle" aria-label="Open navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile nav drawer -->
+  <div class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <a href="#"               class="mobile-nav-link">Home</a>
+    <a href="#departments"    class="mobile-nav-link">Departments</a>
+    <a href="#practices"      class="mobile-nav-link">Our Practices</a>
+    <a href="#news"           class="mobile-nav-link">News &amp; Events</a>
+    <a href="#hall-of-fame"   class="mobile-nav-link">Hall of Fame</a>
+    <a href="#global-offices" class="mobile-nav-link">Global Offices</a>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" aria-label="Welcome">
+    <div class="hero-bg" role="presentation" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow" aria-label="Current session info">
+        <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+        Welcome back, Aryan &nbsp;·&nbsp; Friday, April 17
+      </div>
+      <h1 class="hero-title">
+        Your workspace,<br>
+        <span class="hero-title-accent">all in one place.</span>
+      </h1>
+      <p class="hero-subtitle">Everything you need to move fast, stay aligned, and do your best work at Gruve.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="document.getElementById('departments').scrollIntoView({behavior:'smooth'})">
+          Explore Departments
+        </button>
+        <button class="btn-ghost">New Joiners Hub</button>
+      </div>
+      <div class="stats-strip" role="list" aria-label="Company at a glance">
+        <div class="stat-item" role="listitem">
+          <span class="stat-number">6</span>
+          <span class="stat-label">Departments</span>
+        </div>
+        <div class="stat-item" role="listitem">
+          <span class="stat-number">12</span>
+          <span class="stat-label">Global Offices</span>
+        </div>
+        <div class="stat-item" role="listitem">
+          <span class="stat-number">200+</span>
+          <span class="stat-label">Team Members</span>
+        </div>
+        <div class="stat-item" role="listitem">
+          <span class="stat-number">7</span>
+          <span class="stat-label">Countries</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QUICK ACCESS ===== -->
+  <section class="section" aria-label="Quick access">
+    <div class="container">
+      <div class="quick-grid" role="list">
+
+        <button class="quick-item" role="listitem" aria-label="New Joiner Hub">
+          <div class="quick-icon" aria-hidden="true"><i data-lucide="user-plus"></i></div>
+          <span class="quick-label">New Joiner Hub</span>
+        </button>
+
+        <button class="quick-item" role="listitem" aria-label="The Green Book">
+          <div class="quick-icon" aria-hidden="true"><i data-lucide="book-open"></i></div>
+          <span class="quick-label">The Green Book</span>
+        </button>
+
+        <button class="quick-item" role="listitem" aria-label="General Helpdesk">
+          <div class="quick-icon" aria-hidden="true"><i data-lucide="headphones"></i></div>
+          <span class="quick-label">General Helpdesk</span>
+        </button>
+
+        <button class="quick-item" role="listitem" aria-label="People Skills App">
+          <div class="quick-icon" aria-hidden="true"><i data-lucide="users"></i></div>
+          <span class="quick-label">People Skills App</span>
+        </button>
+
+        <button class="quick-item" role="listitem" aria-label="Our Facilities">
+          <div class="quick-icon" aria-hidden="true"><i data-lucide="building-2"></i></div>
+          <span class="quick-label">Our Facilities</span>
+        </button>
+
+        <button class="quick-item" role="listitem" aria-label="Go-to-Market Hub">
+          <div class="quick-icon" aria-hidden="true"><i data-lucide="bar-chart-2"></i></div>
+          <span class="quick-label">Go-to-Market Hub</span>
+        </button>
+
+        <button class="quick-item" role="listitem" aria-label="L&D Courses">
+          <div class="quick-icon" aria-hidden="true"><i data-lucide="graduation-cap"></i></div>
+          <span class="quick-label">L&amp;D Courses</span>
+        </button>
+
+        <button class="quick-item" role="listitem" aria-label="IT Support">
+          <div class="quick-icon" aria-hidden="true"><i data-lucide="shield"></i></div>
+          <span class="quick-label">IT Support</span>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DEPARTMENTAL HUB ===== -->
+  <section class="section-alt" id="departments" aria-labelledby="dept-heading">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Internal Resources</p>
+        <h2 class="section-title" id="dept-heading">Departmental Hub</h2>
+        <p class="section-subtitle">Find everything your team needs — from brand assets to compliance docs.</p>
+      </div>
+
+      <div class="dept-grid">
+
+        <div class="dept-card" role="button" tabindex="0" aria-label="Marketing — open resources">
+          <div class="dept-icon-wrap">
+            <img src="assets/category-icons/marketing.svg" alt="" aria-hidden="true" width="26" height="26">
+          </div>
+          <div class="dept-tag-row">
+            <span class="tag">Brand</span>
+            <span class="tag">Content</span>
+          </div>
+          <div class="dept-name">Marketing</div>
+          <div class="dept-desc">Branding, campaigns, templates, and content strategy resources for the Gruve brand.</div>
+          <div class="dept-arrow" aria-hidden="true"><i data-lucide="arrow-right"></i> Open resources</div>
+        </div>
+
+        <div class="dept-card" role="button" tabindex="0" aria-label="Finance — open resources">
+          <div class="dept-icon-wrap">
+            <img src="assets/category-icons/finance.svg" alt="" aria-hidden="true" width="26" height="26">
+          </div>
+          <div class="dept-tag-row">
+            <span class="tag">Reports</span>
+            <span class="tag">Policy</span>
+          </div>
+          <div class="dept-name">Finance</div>
+          <div class="dept-desc">Financial resources, reporting templates, and policy documentation at your fingertips.</div>
+          <div class="dept-arrow" aria-hidden="true"><i data-lucide="arrow-right"></i> Open resources</div>
+        </div>
+
+        <div class="dept-card" role="button" tabindex="0" aria-label="Sales — open resources">
+          <div class="dept-icon-wrap">
+            <img src="assets/category-icons/sales.svg" alt="" aria-hidden="true" width="26" height="26">
+          </div>
+          <div class="dept-tag-row">
+            <span class="tag">Pitches</span>
+            <span class="tag">Clients</span>
+          </div>
+          <div class="dept-name">Sales</div>
+          <div class="dept-desc">Pitch decks, client materials, and revenue-driving assets for the sales team.</div>
+          <div class="dept-arrow" aria-hidden="true"><i data-lucide="arrow-right"></i> Open resources</div>
+        </div>
+
+        <div class="dept-card" role="button" tabindex="0" aria-label="People and HR — open resources">
+          <div class="dept-icon-wrap">
+            <img src="assets/category-icons/hr.svg" alt="" aria-hidden="true" width="26" height="26">
+          </div>
+          <div class="dept-tag-row">
+            <span class="tag">People</span>
+            <span class="tag">Culture</span>
+          </div>
+          <div class="dept-name">People &amp; HR</div>
+          <div class="dept-desc">Policies, onboarding, benefits, and the resources that make Gruve a great place to work.</div>
+          <div class="dept-arrow" aria-hidden="true"><i data-lucide="arrow-right"></i> Open resources</div>
+        </div>
+
+        <div class="dept-card" role="button" tabindex="0" aria-label="IT and Security — open resources">
+          <div class="dept-icon-wrap">
+            <img src="assets/category-icons/cybersecurity.svg" alt="" aria-hidden="true" width="26" height="26">
+          </div>
+          <div class="dept-tag-row">
+            <span class="tag">Tools</span>
+            <span class="tag">Support</span>
+          </div>
+          <div class="dept-name">IT &amp; Security</div>
+          <div class="dept-desc">Tech support, device access, software tools, and cybersecurity resources.</div>
+          <div class="dept-arrow" aria-hidden="true"><i data-lucide="arrow-right"></i> Open resources</div>
+        </div>
+
+        <div class="dept-card" role="button" tabindex="0" aria-label="Legal and Compliance — open resources">
+          <div class="dept-icon-wrap">
+            <img src="assets/category-icons/compliance.svg" alt="" aria-hidden="true" width="26" height="26">
+          </div>
+          <div class="dept-tag-row">
+            <span class="tag">Legal</span>
+            <span class="tag">Compliance</span>
+          </div>
+          <div class="dept-name">Legal &amp; Compliance</div>
+          <div class="dept-desc">Contracts, regulatory frameworks, and all essential compliance documentation.</div>
+          <div class="dept-arrow" aria-hidden="true"><i data-lucide="arrow-right"></i> Open resources</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NEWS + SIDEBAR ===== -->
+  <section class="section" id="news" aria-labelledby="news-heading">
+    <div class="container">
+      <div class="content-layout">
+
+        <!-- Main: News -->
+        <main>
+          <div class="section-header">
+            <p class="section-label">Latest</p>
+            <h2 class="section-title" id="news-heading">News &amp; Updates</h2>
+          </div>
+
+          <div class="news-grid">
+
+            <article class="news-card">
+              <div class="news-thumb clr-purple" aria-hidden="true">
+                <i data-lucide="link-2"></i>
+              </div>
+              <div class="news-meta">
+                <div class="news-tag-row">
+                  <span class="news-tag t-partnership">Partnership</span>
+                  <span class="news-date">April 15, 2026</span>
+                </div>
+                <h3 class="news-title">StepFunction Joins Gruve: Unifying the Data Ecosystem</h3>
+                <p class="news-blurb">Gruve welcomes StepFunction, expanding data engineering capabilities across North America.</p>
+              </div>
+            </article>
+
+            <article class="news-card">
+              <div class="news-thumb clr-blue" aria-hidden="true">
+                <i data-lucide="cpu"></i>
+              </div>
+              <div class="news-meta">
+                <div class="news-tag-row">
+                  <span class="news-tag t-ai">AI</span>
+                  <span class="news-date">April 12, 2026</span>
+                </div>
+                <h3 class="news-title">New Advisors Join Gruve to Drive Real-World AI Adoption</h3>
+                <p class="news-blurb">Two seasoned leaders join Gruve's advisory board to accelerate enterprise AI programs.</p>
+              </div>
+            </article>
+
+            <article class="news-card">
+              <div class="news-thumb clr-green" aria-hidden="true">
+                <i data-lucide="trending-up"></i>
+              </div>
+              <div class="news-meta">
+                <div class="news-tag-row">
+                  <span class="news-tag t-growth">Growth</span>
+                  <span class="news-date">April 8, 2026</span>
+                </div>
+                <h3 class="news-title">Gruve Achieves 3× Year-over-Year Revenue Growth in Q1</h3>
+                <p class="news-blurb">Strong performance across all verticals as Gruve scales its AI-first consulting model globally.</p>
+              </div>
+            </article>
+
+            <article class="news-card">
+              <div class="news-thumb clr-amber" aria-hidden="true">
+                <i data-lucide="globe"></i>
+              </div>
+              <div class="news-meta">
+                <div class="news-tag-row">
+                  <span class="news-tag t-expansion">Expansion</span>
+                  <span class="news-date">April 3, 2026</span>
+                </div>
+                <h3 class="news-title">Gruve Opens New Singapore Office for APAC Markets</h3>
+                <p class="news-blurb">Our newest regional hub serves as the center of operations for Southeast Asia.</p>
+              </div>
+            </article>
+
+          </div>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" aria-label="Sidebar">
+
+          <!-- CEO Quote -->
+          <div class="sidebar-card">
+            <div class="ceo-header">
+              <div class="ceo-avatar" aria-label="JD — CEO of Gruve">JD</div>
+              <div>
+                <p class="ceo-eyebrow">From the CEO</p>
+                <p class="ceo-name">CEO, Gruve</p>
+              </div>
+            </div>
+            <blockquote class="ceo-quote">
+              "We're building a machine that keeps getting better — and that machine is all of you."
+            </blockquote>
+            <a href="#" class="ceo-cta">Read full message ›</a>
+          </div>
+
+          <!-- Useful Links -->
+          <div class="sidebar-card">
+            <p class="sidebar-section-label">Useful Links</p>
+            <nav class="useful-links" aria-label="Useful links">
+
+              <a href="#" class="useful-link">
+                <div class="useful-link-icon" aria-hidden="true"><i data-lucide="user-plus"></i></div>
+                <span class="useful-link-label">New Joiner Hub</span>
+              </a>
+              <a href="#" class="useful-link">
+                <div class="useful-link-icon" aria-hidden="true"><i data-lucide="book-open"></i></div>
+                <span class="useful-link-label">The Green Book</span>
+              </a>
+              <a href="#" class="useful-link">
+                <div class="useful-link-icon" aria-hidden="true"><i data-lucide="headphones"></i></div>
+                <span class="useful-link-label">General Helpdesk</span>
+              </a>
+              <a href="#" class="useful-link">
+                <div class="useful-link-icon" aria-hidden="true"><i data-lucide="users"></i></div>
+                <span class="useful-link-label">People Skills App</span>
+              </a>
+              <a href="#" class="useful-link">
+                <div class="useful-link-icon" aria-hidden="true"><i data-lucide="building-2"></i></div>
+                <span class="useful-link-label">Our Facilities</span>
+              </a>
+
+            </nav>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== INDUSTRY PRACTICES ===== -->
+  <section class="section-alt" id="practices" aria-labelledby="practices-heading">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">What We Do</p>
+        <h2 class="section-title" id="practices-heading">Markets We Serve</h2>
+        <p class="section-subtitle">Gruve's AI-first consulting practice spans industries where transformation matters most.</p>
+      </div>
+
+      <div class="practices-grid">
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Healthcare">
+          <div class="practice-icon"><img src="assets/category-icons/healthcare.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Healthcare</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Aviation">
+          <div class="practice-icon"><img src="assets/category-icons/aviation.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Aviation</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Automotive">
+          <div class="practice-icon"><img src="assets/category-icons/automotive.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Automotive</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Logistics">
+          <div class="practice-icon"><img src="assets/category-icons/logistics.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Logistics</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Government">
+          <div class="practice-icon"><img src="assets/category-icons/government.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Government</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Insurance">
+          <div class="practice-icon"><img src="assets/category-icons/insurance.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Insurance</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Oil and Gas">
+          <div class="practice-icon"><img src="assets/category-icons/oil and gas.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Oil &amp; Gas</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Supply Chain">
+          <div class="practice-icon"><img src="assets/category-icons/supply chain.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Supply Chain</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Industrial Engineering">
+          <div class="practice-icon"><img src="assets/category-icons/industrial engineering.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Industrial Engineering</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Financial Services">
+          <div class="practice-icon"><img src="assets/category-icons/monetary.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Financial Services</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Regulatory">
+          <div class="practice-icon"><img src="assets/category-icons/regulatory.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Regulatory</span>
+        </div>
+
+        <div class="practice-card" role="button" tabindex="0" aria-label="Economics">
+          <div class="practice-icon"><img src="assets/category-icons/economics.svg" alt="" aria-hidden="true" width="36" height="36"></div>
+          <span class="practice-name">Economics</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HALL OF FAME ===== -->
+  <section class="section" id="hall-of-fame" aria-labelledby="hof-heading">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Recognition</p>
+        <h2 class="section-title" id="hof-heading">Hall of Fame</h2>
+        <p class="section-subtitle">Celebrating the Gruvians who went above and beyond this quarter.</p>
+      </div>
+
+      <div class="hof-grid">
+
+        <div class="hof-card gold" role="button" tabindex="0" aria-label="1st place: Sarah R., Marketing">
+          <span class="hof-rank-badge">1st Place</span>
+          <span class="hof-rank-num" aria-hidden="true">01</span>
+          <div class="hof-avatar" aria-hidden="true">SR</div>
+          <div class="hof-name">Sarah R.</div>
+          <div class="hof-dept">Marketing</div>
+        </div>
+
+        <div class="hof-card silver" role="button" tabindex="0" aria-label="2nd place: Marcus K., Engineering">
+          <span class="hof-rank-badge">2nd Place</span>
+          <span class="hof-rank-num" aria-hidden="true">02</span>
+          <div class="hof-avatar" aria-hidden="true">MK</div>
+          <div class="hof-name">Marcus K.</div>
+          <div class="hof-dept">Engineering</div>
+        </div>
+
+        <div class="hof-card bronze" role="button" tabindex="0" aria-label="3rd place: Priya L., Sales">
+          <span class="hof-rank-badge">3rd Place</span>
+          <span class="hof-rank-num" aria-hidden="true">03</span>
+          <div class="hof-avatar" aria-hidden="true">PL</div>
+          <div class="hof-name">Priya L.</div>
+          <div class="hof-dept">Sales</div>
+        </div>
+
+      </div>
+
+      <div class="hof-footer">
+        <button class="btn-outline">
+          View full leaderboard
+          <i data-lucide="arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GLOBAL OFFICES ===== -->
+  <section class="section-alt" id="global-offices" aria-labelledby="clocks-heading">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Always In Sync</p>
+        <h2 class="section-title" id="clocks-heading">Global Offices</h2>
+      </div>
+
+      <div class="clocks-grid">
+
+        <div class="clock-card">
+          <div class="clock-flag" aria-hidden="true">🇺🇸</div>
+          <div class="clock-time" id="clock-redwood" aria-label="Current time in Redwood City">--:--:--</div>
+          <div class="clock-city">Redwood City</div>
+          <div class="clock-tz">America / Los Angeles</div>
+        </div>
+
+        <div class="clock-card">
+          <div class="clock-flag" aria-hidden="true">🇺🇸</div>
+          <div class="clock-time" id="clock-dallas" aria-label="Current time in Dallas">--:--:--</div>
+          <div class="clock-city">Dallas, TX</div>
+          <div class="clock-tz">America / Chicago</div>
+        </div>
+
+        <div class="clock-card">
+          <div class="clock-flag" aria-hidden="true">🇮🇳</div>
+          <div class="clock-time" id="clock-pune" aria-label="Current time in Pune">--:--:--</div>
+          <div class="clock-city">Pune, India</div>
+          <div class="clock-tz">Asia / Kolkata</div>
+        </div>
+
+        <div class="clock-card">
+          <div class="clock-flag" aria-hidden="true">🇦🇪</div>
+          <div class="clock-time" id="clock-dubai" aria-label="Current time in Dubai">--:--:--</div>
+          <div class="clock-city">Dubai, UAE</div>
+          <div class="clock-tz">Asia / Dubai</div>
+        </div>
+
+        <div class="clock-card">
+          <div class="clock-flag" aria-hidden="true">🇸🇬</div>
+          <div class="clock-time" id="clock-singapore" aria-label="Current time in Singapore">--:--:--</div>
+          <div class="clock-city">Singapore</div>
+          <div class="clock-tz">Asia / Singapore</div>
+        </div>
+
+        <div class="clock-card">
+          <div class="clock-flag" aria-hidden="true">🇬🇧</div>
+          <div class="clock-time" id="clock-london" aria-label="Current time in London">--:--:--</div>
+          <div class="clock-city">London, UK</div>
+          <div class="clock-tz">Europe / London</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/gruve-logo.svg" alt="Gruve" width="65" height="18">
+        <span class="footer-brand-text">The LaunchPad &nbsp;·&nbsp; © 2026 Gruve</span>
+      </div>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="#" class="footer-link">Privacy</a>
+        <a href="#" class="footer-link">Accessibility</a>
+        <a href="#" class="footer-link">IT Support</a>
+        <a href="#" class="footer-link">Feedback</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // Render Lucide icons
+    lucide.createIcons();
+
+    // Sticky nav border on scroll
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    // Mobile nav toggle
+    const toggle = document.getElementById('mobile-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    let navOpen = false;
+
+    const menuSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>`;
+    const closeSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+
+    toggle.addEventListener('click', () => {
+      navOpen = !navOpen;
+      mobileNav.classList.toggle('open', navOpen);
+      toggle.setAttribute('aria-expanded', navOpen.toString());
+      toggle.setAttribute('aria-label', navOpen ? 'Close navigation' : 'Open navigation');
+      toggle.innerHTML = navOpen ? closeSVG : menuSVG;
+    });
+
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navOpen = false;
+        mobileNav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open navigation');
+        toggle.innerHTML = menuSVG;
+      });
+    });
+
+    // Live world clocks
+    const clockZones = [
+      { id: 'clock-redwood',   tz: 'America/Los_Angeles' },
+      { id: 'clock-dallas',    tz: 'America/Chicago'     },
+      { id: 'clock-pune',      tz: 'Asia/Kolkata'        },
+      { id: 'clock-dubai',     tz: 'Asia/Dubai'          },
+      { id: 'clock-singapore', tz: 'Asia/Singapore'      },
+      { id: 'clock-london',    tz: 'Europe/London'       },
+    ];
+
+    function updateClocks() {
+      const now = new Date();
+      clockZones.forEach(({ id, tz }) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = new Intl.DateTimeFormat('en-GB', {
+          hour: '2-digit', minute: '2-digit', second: '2-digit',
+          hour12: false, timeZone: tz,
+        }).format(now);
+      });
+    }
+    updateClocks();
+    setInterval(updateClocks, 1000);
+
+    // Keyboard activation for role="button" elements
+    document.querySelectorAll('[role="button"]').forEach(el => {
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+      });
+    });
+  </script>
+</body>
+</html>
